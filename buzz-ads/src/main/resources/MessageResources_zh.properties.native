@@ -1,0 +1,16 @@
+global.format.money = {0,number,##,##0.00}
+global.format.percentage = {0,number,##,##0.00'%'}
+global.format.number = {0,number}
+
+user.authentication.invalid=\u7528\u6237\u540d\u53ca\u5bc6\u7801\u9519\u8bef\u3002
+
+buzzads.bottom.copyright=<a title="擘纳" href="http://www.buzzinate.com" target="_blank" class="bLinkOrangeU">擘纳</a>（上海）信息科技有限公司。版权所有。
+buzzads.icp=沪ICP备09026724号-7
+
+buzzads.stats.common.pubCommission=元
+
+buzzads.advertiser.companyName.error.message=请填写正确的公司名称,不要包含特殊字符
+buzzads.advertiser.websiteName.error.message=请填写正确的网站名称,不要包含特殊字符
+buzzads.advertiser.address.error.message=请输入正确的地址，不要包含特殊字符
+buzzads.advertiser.name.error.message=请输入正确的联系人名称,不要包含特殊字符
+buzzads.advertiser.qq.error.message=请输入正确的QQ号码

@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<log-config>
+    <!-- 月结 -->
+    <log type="10001" objtype="100" objtypename="月结" name="支付佣金" description="站长ID:{pubId},结算月份:{month},结算金额:{commCount}" />
+    <log type="10002" objtype="100" objtypename="月结" name="撤销支付" description="支付ID:{payId}" />
+    <!-- 会员管理 -->
+    <log type="20001" objtype="101" objtypename="会员管理" name="冻结会员" description="站长ID:{pubId},站长账户:{pubCount}" />
+    <log type="20002" objtype="101" objtypename="会员管理" name="解冻会员" description="站长ID:{pubId},站长账户:{pubCount}" />
+    <log type="20003" objtype="101" objtypename="会员管理" name="更新会员" description="原资料:{sourcePub},新资料:{newPub}" />
+    <!-- 广告管理 -->
+    <log type="30001" objtype="102" objtypename="广告管理 " name="通过广告" description="广告ID:{adEntryId},广告主ID:{advertiserId}" />
+    <log type="30002" objtype="102" objtypename="广告管理 " name="拒绝广告" description="广告ID:{adEntryId},广告主ID:{advertiserId}" />
+    <log type="30003" objtype="102" objtypename="广告管理 " name="广告状态管理" description="广告ID:{adEntryId},广告主ID:{advertiserId},原状态:{preStatus},目标状态:{targetStatus}" />
+    <!-- Adjustment -->
+    <log type="40001" objtype="103" objtypename="Adjustment管理" name="新增Adjustment" description="管理员ID:{adminId},充值对象ID:{receiverId},充值金额:{receiveAmount}"/>
+    <!-- 充值 -->
+    <log type="50001" objtype="104" objtypename="广告主充值" name="新增充值记录" description="广告主ID:{advertiserId},交易号:{tradeNo},充值金额:{rechargeAmount}"/>
+    <!-- advertiser management -->
+    <log type="60001" objtype="105" objtypename="广告主管理" name="冻结广告主" description="广告主ID:{advertiserId},广告主公司名:{advertiserCompanyName}"/>
+    <log type="60002" objtype="105" objtypename="广告主管理" name="解冻广告主" description="广告主ID:{advertiserId},广告主公司名:{advertiserCompanyName}"/>
+    <!-- 活动管理 -->
+    <log type="70001" objtype="106" objtypename="活动管理" name="活动状态管理" description="活动ID:{campId},活动名称:{campName},之前状态:{preStatus},目标状态:{toStatus}"/>
+    <!-- 广告组 -->
+    <log type="80001" objtype="106" objtypename="广告组管理" name="广告组状态管理" description="广告组ID:{orderId},广告组名称:{orderName},之前状态:{preStatus},目标状态:{toStatus}"/>
+</log-config>

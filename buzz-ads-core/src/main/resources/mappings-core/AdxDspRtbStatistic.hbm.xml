@@ -1,0 +1,37 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC 
+"-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping>
+    <class name="com.buzzinate.buzzads.domain.AdxDspRtbStatistic" table="adx_dsp_rtb_statistic">
+        <id name="id" column="ID">
+            <generator class="native" />
+        </id>
+        <property name="key" >
+          <column name="`KEY`" />
+        </property>
+        <property name="requestCount">
+          <column name="REQUEST_NO"/>
+        </property>
+        <property name="responseCount">
+          <column name="RESPONSE_NO"/>
+        </property>
+        <property name="bidSuccCount">
+          <column name="BIDSUCC_NO"/>
+        </property>
+        <property name="validCount">
+          <column name="VALID_NO"/>
+        </property>
+    </class>
+
+    <sql-query name="AdxDspRtbStatistic.updateAdxDspStatistic">
+        insert into adx_dsp_rtb_statistic(`KEY`, REQUEST_NO, RESPONSE_NO, BIDSUCC_NO, VALID_NO)
+            values(:key, :requestCount, :responseCount, :bidSuccCount, :validCount)
+        on duplicate key update    
+            REQUEST_NO = :requestCount + REQUEST_NO,
+	        RESPONSE_NO = :responseCount + RESPONSE_NO,
+	        BIDSUCC_NO = :bidSuccCount + BIDSUCC_NO,
+	        VALID_NO = :validCount + VALID_NO
+    </sql-query>
+</hibernate-mapping>

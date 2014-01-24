@@ -1,0 +1,6 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<dataset>
+    <advertiser_billing id ="1" advertiser_id="1" type ="0" debits="10" credits="0" balance="10" update_at="2013-01-12" />
+    <advertiser_billing id ="2" advertiser_id="1" type ="0" debits="20" credits="0" balance="20" update_at="2013-01-13" />
+    <advertiser_billing id ="3" advertiser_id="1" type ="1" debits="0" credits="30" balance="30" update_at="2013-01-14" />
+</dataset>

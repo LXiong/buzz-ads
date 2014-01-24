@@ -1,0 +1,6 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<dataset>
+    <advertiser_balance advertiser_id="1" debits_total="100" credits_total="200" balance="10" update_at="2013-01-12" />
+    <advertiser_balance advertiser_id="2" debits_total="300" credits_total="400" balance="20" update_at="2013-01-13" />
+    <advertiser_balance advertiser_id="3" debits_total="400" credits_total="500" balance="30" update_at="2013-01-14" />
+</dataset>

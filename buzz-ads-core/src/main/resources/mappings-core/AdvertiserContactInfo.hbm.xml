@@ -1,0 +1,42 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC 
+"-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping>
+    <class name="com.buzzinate.buzzads.domain.AdvertiserContactInfo" table="advertiser_contact_info">
+        <id name="id" column="ID">
+            <generator class="native" />
+        </id>
+        
+        <property name="advertiserId">
+            <column name="ADVERTISER_ID"></column>
+        </property>
+        
+        <property name="address">
+            <column name="ADDRESS"></column>
+        </property>
+        
+        <property name="email">
+            <column name="EMAIL"></column>
+        </property>
+        
+        <property name="name">
+            <column name="NAME"></column>
+        </property>
+        
+        <property name="mobile">
+            <column name="MOBILE"></column>
+        </property>
+        
+        <property name="qq">
+            <column name="QQ"></column>
+        </property>
+    
+    </class>
+    
+    <query name="AdvertiserContactInfoDao.getAdvertiserContactInfo">
+        from AdvertiserContactInfo where advertiserId = :advertiserId
+    </query>
+
+</hibernate-mapping> 

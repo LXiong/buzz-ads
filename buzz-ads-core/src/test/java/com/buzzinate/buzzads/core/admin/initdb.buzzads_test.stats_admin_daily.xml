@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<dataset xmlns:buzzads_test="buzzads_test">
+	<!-- buzzads_test.stats_admin_daily -->
+	<buzzads_test:stats_admin_daily id="1"
+		date_day="2012-12-17 15:29:00" product="1" views="1" clicks="2"
+		cpc_click_no="2" cpc_pub_commission="2" cpc_total_commission="3"
+		cps_order_no="232323" cps_confirmed_commission="12"
+		cps_total_commission="323" cps_total_price="23" />
+
+	<buzzads_test:stats_admin_daily id="1"
+		date_day="2012-12-17 16:29:00" product="1" views="1" clicks="2"
+		cpc_click_no="2" cpc_pub_commission="2" cpc_total_commission="3"
+		cps_order_no="232323" cps_confirmed_commission="12"
+		cps_total_commission="323" cps_total_price="23" />
+</dataset>

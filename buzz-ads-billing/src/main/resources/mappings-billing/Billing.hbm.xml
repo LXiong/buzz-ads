@@ -1,0 +1,93 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC
+    "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+    "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping>
+    <!-- For table in analytics db -->
+
+    <sql-query name="statAdDaily.insertOrUpdateCpc">
+        insert into stats_ad_daily
+        (adentry_id, date_day, network, uuid, adorder_id, views, clicks,
+            cpc_click_no, cpc_pub_commission, cpc_total_commission,
+            cps_order_no, cps_confirmed_commission, cps_pub_commission, cps_total_confirmed_commission, cps_total_commission, cps_total_price)
+        values
+            (:adentryId, DATE(:date), :network, :uuid, :adorderId, 0, 0,
+            :cpcClickNo, :cpcPubCommission, :cpcTotalCommission,
+            0, 0, 0, 0, 0, 0)
+        on duplicate key update
+            cpc_click_no = cpc_click_no + :cpcClickNo,
+            cpc_pub_commission = cpc_pub_commission + :cpcPubCommission,
+            cpc_total_commission = cpc_total_commission + :cpcTotalCommission
+    </sql-query>
+
+    <sql-query name="statCampaignDaily.insertOrUpdateCpc">
+        insert into stats_campaign_daily
+        (campaign_id, date_day, network, advertiser_id, views, clicks,
+            cpc_click_no, cpc_pub_commission, cpc_total_commission,
+            cps_order_no, cps_confirmed_commission, cps_pub_commission, cps_total_confirmed_commission, cps_total_commission, cps_total_price)
+        values
+            (:campaignId, DATE(:date), :network, :advertiserId, 0, 0,
+            :cpcClickNo, :cpcPubCommission, :cpcTotalCommission,
+            0, 0, 0, 0, 0, 0)
+        on duplicate key update
+            cpc_click_no = cpc_click_no + :cpcClickNo,
+            cpc_pub_commission = cpc_pub_commission + :cpcPubCommission,
+            cpc_total_commission = cpc_total_commission + :cpcTotalCommission,
+            cpm_view_no = cpm_view_no + :cpmViewNo,
+            cpm_pub_commission = cpm_pub_commission + :cpmPubCommission,
+            cpm_total_commission = cpm_total_commission + :cpmTotalCommission
+    </sql-query>
+    
+    <sql-query name="statOrderDaily.insertOrUpdateCpc">
+        insert into stats_order_daily
+        (order_id, date_day, network, views, clicks,
+            cpc_click_no, cpc_pub_commission, cpc_total_commission,
+            cps_order_no, cps_confirmed_commission, cps_pub_commission, cps_total_confirmed_commission, cps_total_commission, cps_total_price)
+        values
+            (:orderId, DATE(:date), :network, 0, 0,
+            :cpcClickNo, :cpcPubCommission, :cpcTotalCommission,
+            0, 0, 0, 0, 0, 0)
+        on duplicate key update
+            cpc_click_no = cpc_click_no + :cpcClickNo,
+            cpc_pub_commission = cpc_pub_commission + :cpcPubCommission,
+            cpc_total_commission = cpc_total_commission + :cpcTotalCommission
+    </sql-query>    
+    
+    <sql-query name="statsPublisherDaily.insertOrUpdateCpc">
+        insert into stats_publisher_daily
+        (uuid, date_day, network, views, clicks,
+            cpc_click_no, cpc_pub_commission, cpc_total_commission,
+            cps_order_no, cps_confirmed_commission, cps_pub_commission, cps_total_confirmed_commission, cps_total_commission, cps_total_price)
+        values
+            (:uuid, DATE(:date), :network, 0, 0,
+            :cpcClickNo, :cpcPubCommission, :cpcTotalCommission,
+            0, 0, 0, 0, 0, 0)
+        on duplicate key update
+            cpc_click_no = cpc_click_no + :cpcClickNo,
+            cpc_pub_commission = cpc_pub_commission + :cpcPubCommission,
+            cpc_total_commission = cpc_total_commission + :cpcTotalCommission,
+            cpm_view_no = cpm_view_no + :cpmViewNo,
+            cpm_pub_commission = cpm_pub_commission + :cpmPubCommission,
+            cpm_total_commission = cpm_total_commission + :cpmTotalCommission
+    </sql-query>
+
+    <sql-query name="statsAdminDaily.insertOrUpdateCpc">
+        insert into stats_admin_daily
+        (date_day, network, views, clicks,
+            cpc_click_no, cpc_pub_commission, cpc_total_commission,
+            cps_order_no, cps_confirmed_commission, cps_pub_commission, cps_total_confirmed_commission, cps_total_commission, cps_total_price)
+        values
+            (DATE(:date), :network, 0, 0,
+            :cpcClickNo, :cpcPubCommission, :cpcTotalCommission,
+            0, 0, 0, 0, 0, 0)
+        on duplicate key update
+            cpc_click_no = cpc_click_no + :cpcClickNo,
+            cpc_pub_commission = cpc_pub_commission + :cpcPubCommission,
+            cpc_total_commission = cpc_total_commission + :cpcTotalCommission,
+            cpm_view_no = cpm_view_no + :cpmViewNo,
+            cpm_pub_commission = cpm_pub_commission + :cpmPubCommission,
+            cpm_total_commission = cpm_total_commission + :cpmTotalCommission
+    </sql-query>
+
+</hibernate-mapping>

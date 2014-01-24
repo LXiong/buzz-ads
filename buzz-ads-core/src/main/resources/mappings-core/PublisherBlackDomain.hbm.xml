@@ -1,0 +1,32 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC 
+"-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping>
+    <class name="com.buzzinate.buzzads.domain.PublisherBlackDomain" table="publisher_black_domain">
+        <id name="id" column="ID">
+            <generator class="native" />
+        </id>
+        
+        
+        <property name="uuidBytes" type="binary">
+            <column name="UUID"></column>
+        </property>
+        
+        <property name="type" column="TYPE">
+            <type name="com.buzzinate.common.util.hibernate.IntegerValuedEnumType">
+                <param name="enum">com.buzzinate.buzzads.enums.PublisherSiteConfigType</param>
+            </type>
+        </property>
+        
+        <property name="url">
+            <column name="URL" />
+        </property>
+    </class>
+    
+    <query name="PublisherBlackDomain.listByUuid">
+        from PublisherBlackDomain where uuidBytes =:uuid    
+    </query>
+    
+</hibernate-mapping>

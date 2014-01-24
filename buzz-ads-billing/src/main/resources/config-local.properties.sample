@@ -1,0 +1,11 @@
+redis.ips=192.168.1.136:6379
+
+datasource.buzzads.master.ip=127.0.0.1
+datasource.buzzads.slave.ip=127.0.0.1
+
+datasource.buzzads.master.username=buzzinate_w
+datasource.buzzads.master.password=
+datasource.buzzads.slave.username=buzzinate_r
+datasource.buzzads.slave.password=
+
+hibernate.showsql=true

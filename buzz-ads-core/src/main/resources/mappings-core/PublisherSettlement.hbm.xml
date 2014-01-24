@@ -1,0 +1,238 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC 
+"-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping>
+    <class name="com.buzzinate.buzzads.domain.PublisherSettlement" table="publisher_settlement">
+        <id name="id" column="ID">
+            <generator class="native" />
+        </id>
+        <property name="userId">
+            <column name="USER_ID"/>
+        </property>
+        <property name="month">
+            <column name="MONTH"/>
+        </property>
+        <property name="cpsNo">
+            <column name="CPS_NO"/>
+        </property>
+        <property name="cpsCommission">
+            <column name="CPS_COMMISSION"/>
+        </property>
+        <property name="cpmNo">
+            <column name="CPM_NO"/>
+        </property>
+        <property name="cpmCommission">
+            <column name="CPM_COMMISSION"/>
+        </property>
+        <property name="cpcNo">
+            <column name="CPC_NO"/>
+        </property>
+        <property name="cpcCommission">
+            <column name="CPC_COMMISSION"/>
+        </property>
+        <property name="commission">
+            <column name="COMMISSION"/>
+        </property>
+        <property name="status" column="STATUS">
+            <type name="com.buzzinate.common.util.hibernate.IntegerValuedEnumType">
+                <param name="enum">com.buzzinate.buzzads.enums.SettlementStatusEnum</param>
+            </type>
+        </property>
+        <property name="paymentId">
+            <column name="PAYMENT_ID"/>
+        </property>
+        <property name="payTime">
+            <column name="PAYMENT_TIME"/>
+        </property>
+        <property name="commUpdateDay">
+            <column name="COMM_UPDATE_DAY"/>
+        </property>
+    </class>
+    
+    <sql-query name="PublisherSettlementDao.countByUserId">
+        <return-scalar column="num" type="long"/>
+        select count(*) num from PublisherSettlement where userId = :userId
+    </sql-query>
+    
+    <query name="PublisherSettlementDao.getByUserId">
+        from PublisherSettlement where userId = :userId order by month desc
+    </query>
+    
+    <query name="PublisherSettlementDao.getByUserIdAndMonth">
+        from PublisherSettlement where userId = :userId and month = :month
+    </query>
+    
+    <sql-query name="PublisherSettlementDao.listByMonth">
+        <return-scalar column="userId" type="int"/>
+        <return-scalar column="commission" type="int"/>
+        SELECT USER_ID userId, SUM(COMMISSION) commission 
+        FROM publisher_settlement
+        <![CDATA[
+        WHERE month <= :month and status = 0
+        ]]>
+        GROUP BY USER_ID
+        LIMIT :start, :max
+    </sql-query>
+    
+    <sql-query name="PublisherSettlementDao.getTotalCommissionByMonth">
+        <return-scalar column="totalCommission" type="int"/>
+        SELECT SUM(COMMISSION) totalCommission 
+        FROM publisher_settlement
+        <![CDATA[
+        WHERE month <= :month and status = 0
+        ]]>
+    </sql-query>
+    
+    <sql-query name="PublisherSettlementDao.listByMonth.count">
+        <return-scalar column="recordSize" type="int"/>
+        SELECT COUNT(*) recordSize FROM (
+        SELECT USER_ID userId, SUM(COMMISSION) commission 
+        FROM publisher_settlement
+        <![CDATA[
+        WHERE month <= :month and status = 0
+        ]]>
+        GROUP BY USER_ID ) a
+    </sql-query>
+    
+    <sql-query name="PublisherSettlementDao.listByUserAmountMonth">
+        <return-scalar column="userId" type="int"/>
+        <return-scalar column="commission" type="int"/>
+        SELECT USER_ID userId, SUM(COMMISSION) commission 
+        FROM publisher_settlement a
+        <![CDATA[
+        WHERE a.month <= :month and a.status = 0 and a.user_id in (:userIds)  
+        ]]>
+        GROUP BY a.USER_ID 
+        HAVING SUM(COMMISSION) >= :amount 
+        LIMIT :start, :max
+    </sql-query>
+    
+    <sql-query name="PublisherSettlementDao.getTotalCommissionByUserAmountMonth">
+        <return-scalar column="totalCommission" type="int"/>
+        SELECT SUM(b.commission) totalCommission FROM ( 
+            SELECT USER_ID userId, SUM(COMMISSION) commission 
+            FROM publisher_settlement a
+            <![CDATA[
+            WHERE a.month <= :month and a.status = 0 and a.user_id in (:userIds)  
+            ]]>
+            GROUP BY a.USER_ID 
+            HAVING SUM(COMMISSION) >= :amount) b
+    </sql-query>
+    
+    <sql-query name="PublisherSettlementDao.listByUserAmountMonth.count">
+        <return-scalar column="recordSize" type="long"/>
+        select COUNT(*) recordSize from (
+        SELECT * 
+        FROM publisher_settlement
+        <![CDATA[
+        WHERE month <= :month and status = 0 and user_id in (:userIds) 
+        ]]>
+        GROUP BY USER_ID 
+        HAVING SUM(COMMISSION) >= :amount ) b
+    </sql-query>
+    
+    <sql-query name="PublisherSettlementDao.listByUserMonth">
+        <return-scalar column="userId" type="int"/>
+        <return-scalar column="commission" type="int"/>
+        SELECT USER_ID userId, SUM(CPC_COMMISSION + CPM_COMMISSION*100 + CPS_COMMISSION) commission
+        FROM publisher_settlement
+        <![CDATA[
+        WHERE month <= :month and user_id in (:userIds) and status = 0
+        ]]>
+        GROUP BY USER_ID 
+        LIMIT :start, :max
+    </sql-query>
+    
+    <sql-query name="PublisherSettlementDao.listByUserMonth.count">
+        <return-scalar column="recordSize" type="long"/>
+        SELECT COUNT(a.userId) recordSize FROM (
+            SELECT USER_ID userId, SUM(CPC_COMMISSION + CPM_COMMISSION*100 + CPS_COMMISSION) commission
+            FROM publisher_settlement
+            <![CDATA[
+            WHERE month <= :month and user_id in (:userIds) and status = 0
+            ]]>
+            GROUP BY USER_ID ) a
+    </sql-query>
+    
+    <sql-query name="PublisherSettlementDao.getTotalCommissionByUserMonth">
+        <return-scalar column="totalCommission" type="int"/>
+        SELECT SUM(COMMISSION) totalCommission 
+        FROM publisher_settlement
+        <![CDATA[
+        WHERE month <= :month and user_id in (:userIds) and status = 0
+        ]]>
+    </sql-query>
+    
+    <sql-query name="PublisherSettlementDao.listByAmountMonth">
+        <return-scalar column="userId" type="int"/>
+        <return-scalar column="commission" type="int"/>
+        SELECT a.USER_ID userId, SUM(a.COMMISSION) commission 
+        FROM publisher_settlement a
+        <![CDATA[
+        WHERE a.month <= :month and a.status = 0 
+        ]]>
+        GROUP BY a.USER_ID
+        HAVING SUM(a.COMMISSION) >= :amount
+        LIMIT :start, :max
+    </sql-query>
+    
+     <sql-query name="PublisherSettlementDao.getTotalCommissionByAmountMonth">
+        <return-scalar column="totalCommission" type="int"/>
+        SELECT sum(commission) totalCommission FROM (
+            SELECT a.USER_ID userId, SUM(a.COMMISSION) commission 
+            FROM publisher_settlement a
+            <![CDATA[
+            WHERE a.month <= :month and a.status = 0 
+            ]]>
+            GROUP BY a.USER_ID 
+            HAVING sum(a.commission) >= :amount 
+            ) b
+    </sql-query>
+    
+    <sql-query name="PublisherSettlementDao.listByAmountMonth.count">
+        <return-scalar column="recordSize" type="int"/>
+        select COUNT(*) recordSize from (
+            SELECT * 
+            FROM publisher_settlement a
+            <![CDATA[
+            WHERE a.month <= :month and a.status = 0 
+            ]]>
+            GROUP BY USER_ID 
+            HAVING SUM(a.COMMISSION) >= :amount ) b
+    </sql-query>
+    
+    <sql-query name="PublisherSettlementDao.insertOrUpdate">
+        insert into publisher_settlement (USER_ID, MONTH, CPS_NO, CPS_COMMISSION, CPC_NO, CPC_COMMISSION, CPM_NO, CPM_COMMISSION, COMMISSION, COMM_UPDATE_DAY)
+            values (:userId, :month, :cpsNo, :cpsCommission, :cpcNo, :cpcCommission, :cpmNo, :cpmCommission, :commission, :updateDay)
+            on duplicate key update 
+            CPS_NO = CPS_NO + :cpsNo, CPS_COMMISSION = CPS_COMMISSION + :cpsCommission,
+            CPC_NO = CPC_NO + :cpcNo, CPC_COMMISSION = CPC_COMMISSION + :cpcCommission,
+            CPM_NO = CPM_NO + :cpmNo, CPM_COMMISSION = CPM_COMMISSION + :cpmCommission,
+            COMMISSION = COMMISSION + :commission, COMM_UPDATE_DAY = :updateDay
+    </sql-query>
+    
+    <query name="PublisherSettlementDao.findCanSettlesByUserId">
+        <![CDATA[
+            from PublisherSettlement where status = 0 and userId = :userId and month <= :settleMonth order by month asc
+        ]]>
+    </query>
+    
+    <query name="PublisherSettlementDao.updatePublisherSettleStatus">
+        <![CDATA[
+            update PublisherSettlement set paymentId = :payId, payTime = :payTime, status = 1 where id in (:ids) and status = 0
+        ]]>
+    </query>
+    
+    <query name="PublisherSettlementDao.rollbackPay">
+        <![CDATA[
+            update PublisherSettlement set paymentId = 0, payTime = null, status = 0 where paymentId = :payId and status = 1
+        ]]>
+    </query>
+    
+    <sql-query name="PublisherSettlementDao.getTotalCommByStatus">
+        <return-scalar column="totalComm" type="int"/>
+        SELECT SUM(CPC_COMMISSION + CPM_COMMISSION*100 + CPS_COMMISSION) totalComm FROM publisher_settlement WHERE STATUS = :status
+    </sql-query>
+</hibernate-mapping>

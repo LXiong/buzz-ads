@@ -1,0 +1,25 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+        "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping>
+    <class name="com.buzzinate.buzzads.domain.RechargeOperateHis" table="recharge_operate_his">
+        <id name="id" column="ID">
+            <generator class="native"/>
+        </id>
+        <property name="operateType" column="operate_type">
+            <type name="com.buzzinate.common.util.hibernate.IntegerValuedEnumType">
+                <param name="enum">com.buzzinate.buzzads.domain.enums.OperateType</param>
+            </type>
+        </property>
+        <property name="recordId">
+            <column name="record_id"/>
+        </property>
+        <property name="advertiserId">
+            <column name="advertiser_id"/>
+        </property>
+        <property name="insertTime">
+            <column name="insert_time"/>
+        </property>
+    </class>
+</hibernate-mapping>

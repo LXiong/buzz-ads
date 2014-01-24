@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<beans xmlns="http://www.springframework.org/schema/beans"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:context="http://www.springframework.org/schema/context"
+    xmlns:util="http://www.springframework.org/schema/util" 
+    xmlns:aop="http://www.springframework.org/schema/aop" 
+    xmlns:p="http://www.springframework.org/schema/p"
+    xsi:schemaLocation="http://www.springframework.org/schema/beans
+      http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+      http://www.springframework.org/schema/util
+      http://www.springframework.org/schema/util/spring-util-3.0.xsd
+      http://www.springframework.org/schema/context 
+      http://www.springframework.org/schema/context/spring-context-3.0.xsd 
+      http://www.springframework.org/schema/aop 
+      http://www.springframework.org/schema/aop/spring-aop-3.0.xsd"
+    default-autowire="byName">
+    
+    <!-- 配置使用Unitils中定义的数据源 -->
+    <bean id="dataSource" class="org.unitils.database.UnitilsDataSourceFactoryBean" />
+    
+    <!-- 配置sessionFactory，和普通项目一样 -->
+    <bean id="sessionFactory"
+        class="org.springframework.orm.hibernate3.LocalSessionFactoryBean">
+        <property name="dataSource" ref="dataSource" />
+        <property name="mappingLocations">
+            <list>
+                <value>classpath:mappings/*.hbm.xml</value>
+                <value>classpath:mappings-core/*.hbm.xml</value>
+            </list>
+        </property>
+        <property name="hibernateProperties">
+            <props>
+                <prop key="hibernate.dialect">org.hibernate.dialect.MySQLDialect</prop>
+                <prop key="hibernate.show_sql">${datasource.hibernate.showsql}</prop>
+                <prop key="hibernate.jdbc.batch_size">1</prop>
+            </props>
+        </property>
+    </bean>
+    
+    <!-- 配置transactionManager，测试时会使用它来管理事务 -->
+    <bean id="transactionManager"
+        class="org.springframework.orm.hibernate3.HibernateTransactionManager">
+        <property name="sessionFactory" ref="sessionFactory" />
+    </bean>
+    
+</beans>

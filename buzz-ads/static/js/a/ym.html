@@ -1,0 +1,64 @@
+<!doctype html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title></title>
+	<style type="text/css">
+		html, body, div, span, applet, object, iframe, p, blockquote, pre,
+		a, abbr, acronym, address, big, cite, code,
+		del, dfn, em, font, img, ins, kbd, q, s, samp,
+		small, strike, strong, tt, var,
+		b, u, i, center, dl, dt, dd, ol, ul, li,
+		fieldset, form, label, legend, button,
+		table, caption, tbody, tfoot, thead, tr, th, td, h1, h2, h3 {
+		    margin: 0;
+		    padding: 0;
+		    border: none;
+		    outline: 0;
+		    font-size: 100%;
+		    vertical-align: baseline;
+		    background: transparent;
+		}
+		#yigao_container { border: 0 !important; }
+	</style>
+</head>
+<body>
+	<script language="javascript" type="text/javascript">
+	function parseOptions(src) {
+	        var options = {}, g, f, c, a, e;
+	        g = /\?(.*)|#(.*)/.exec(src);
+            if (g) {
+            	g = g[0].slice(1).replace("+", " ").split(/[&;]/g);
+		        for (f = 0; f < g.length; f++) {
+		            c = g[f].split("=");
+		            a = decodeURIComponent(c[0]);
+		            e = "";
+		            if (c.length != 1) e = decodeURIComponent(c[1]);
+		            options[a] = e;
+		        }
+            }
+	        return options;
+	}
+	var yzData=parseOptions(window.location.href);
+	yigao_title_color = "null";
+	yigao_content_color = "null";
+	yigao_background_color = "null";
+	yigao_border_color = "D9D9D9";
+	yigao_title_bold = "0";
+	yigao_content_bold = "0";
+	yigao_title_underline = "0";
+	yigao_content_underline = "0";
+	yigao_width =yzData.w ;
+	yigao_height = yzData.h;
+	yigao_sid = ""+yzData.sid+"";
+	yigao_msid = ""+yzData.msid+"";
+	yigao_uid = 79996;
+	yigao_zid = yzData.zid;
+	yigao_pid = yzData.pid;
+	yigao_type = 1;
+	yigao_adamount = 1;
+	yigao_cols = 1;
+</script>
+<script language="javascript" src="http://monitor.yigao.com/info2.js"></script>
+</body>
+</html>

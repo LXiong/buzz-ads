@@ -1,0 +1,102 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC 
+"-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping>
+    <class name="com.buzzinate.buzzads.domain.AdOrder" table="ad_order">
+        <id name="id" column="ID">
+            <generator class="native" />
+        </id>
+        <property name="name">
+            <column name="NAME"/>
+        </property>
+        <property name="status" column="STATUS">
+              <type name="com.buzzinate.common.util.hibernate.IntegerValuedEnumType">
+                <param name="enum">com.buzzinate.buzzads.enums.AdStatusEnum</param>
+              </type>
+        </property>
+        <property name="adsType" column="ADS_TYPE">
+              <type name="com.buzzinate.common.util.hibernate.IntegerValuedEnumType">
+                <param name="enum">com.buzzinate.buzzads.enums.AdsTypeEnum</param>
+              </type>
+        </property>
+        <property name="orderFrequency">
+            <column name="ORDER_FREQUENCY"></column>
+        </property>
+        <property name="entryFrequency">
+            <column name="ENTRY_FREQUENCY"></column>
+        </property>
+        <property name="channelsTarget">
+            <column name="CHANNELS_TARGET"/>
+        </property>
+        <property name="updateAt">
+          <column name="UPDATE_AT"/>
+        </property>
+        <property name="campaignId">
+            <column name="CAMPAIGN_ID"/>
+        </property>
+        <property name="advertiserId">
+            <column name="ADVERTISER_ID"/>
+        </property>     
+        <property name="bidPrice">
+          <column name="BID_PRICE"/>
+        </property>
+        <property name="keywords">
+          <column name="KEYWORDS"/>
+        </property>
+        <property name="audienceCategories">
+          <column name="AUDIENCE_CAT"/>
+        </property>
+        <property name="startDate">
+          <column name="START_DATE"/>
+        </property>
+        <property name="endDate">
+          <column name="END_DATE"/>
+        </property>
+        <property name="scheduleDay"  column="SCHEDULE_DAY">
+            <type name="com.buzzinate.common.util.hibernate.IntegerValuedEnumSetType">
+                <param name="enum">com.buzzinate.buzzads.enums.WeekDay</param>
+            </type>
+        </property>
+        <property name="scheduleTimeStr">
+          <column name="SCHEDULE_TIME"/>
+        </property>
+    </class>
+
+    <query name="AdOrderDao.updateOrderStatus">
+        update AdOrder set status = :status, updateAt = now() where id = :orderId
+    </query>
+    
+    <query name="AdOrderDao.listOrdersByCampaignId">
+        from AdOrder where campaignId = :campaignId
+    </query>
+    
+    <query name="AdOrderDao.listOrdersByCampaignIds">
+        from AdOrder where campaignId in ( :campaignIds )
+    </query>
+    
+    <query name="AdOrderDao.listOrdersByNetworks">
+        from AdOrder where network  in (:networks) 
+    </query>
+    
+    <query name="AdOrderDao.listOrdersByBidTypes">
+        from AdOrder where bidType  in (:bidType) 
+    </query>
+    
+    <query name="AdOrderDao.listOrdersByCondition">
+        from AdOrder where network in (:networks) and bidType in (:bidType) 
+    </query>
+    
+    <query name="AdOrderDao.listAllOrders">
+        from AdOrder
+    </query>
+    
+    <query name="AdOrderDao.listAdOrdersByAdvertiserId">
+        from AdOrder where advertiserId = :advId
+    </query>
+    
+    <query name="AdOrderDao.listActiveAdOrdersByAdvertiserIdWithActiveCamps">
+        from AdOrder where advertiserId = :advId and status = 1 and campaignId in(:activeCampIds)
+    </query>
+</hibernate-mapping>

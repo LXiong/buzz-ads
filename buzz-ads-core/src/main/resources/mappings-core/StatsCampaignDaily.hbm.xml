@@ -1,0 +1,309 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC 
+"-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping>
+    <class name="com.buzzinate.buzzads.analytics.stats.AdCampaignDailyStatistic" table="stats_campaign_daily">
+        <id name="id" column="ID">
+            <generator class="native" />
+        </id>
+        <property name="campaignId">
+            <column name="CAMPAIGN_ID" />
+        </property>
+        <property name="dateDay">
+            <column name="DATE_DAY" />
+        </property>
+        <property name="network" column="NETWORK">
+            <type name="com.buzzinate.common.util.hibernate.IntegerValuedEnumType">
+                <param name="enum">com.buzzinate.buzzads.enums.AdNetworkEnum</param>
+            </type>
+        </property>
+        <property name="advertiserId">
+            <column name="ADVERTISER_ID" />
+        </property>
+        <property name="views">
+            <column name="VIEWS" />
+        </property>
+        <property name="clicks">
+            <column name="CLICKS" />
+        </property>
+        <property name="cpcClickNo">
+            <column name="CPC_CLICK_NO" />
+        </property>
+        <property name="cpcPubCommission">
+            <column name="CPC_PUB_COMMISSION" />
+        </property>
+        <property name="cpcTotalCommission">
+            <column name="CPC_TOTAL_COMMISSION" />
+        </property>
+        <property name="cpsOrderNo">
+            <column name="CPS_ORDER_NO" />
+        </property>
+        <property name="cpsConfirmedCommission">
+            <column name="CPS_CONFIRMED_COMMISSION" />
+        </property>
+        <property name="cpsPubCommission">
+            <column name="CPS_PUB_COMMISSION" />
+        </property>
+        <property name="cpsTotalConfirmedCommission">
+            <column name="CPS_TOTAL_CONFIRMED_COMMISSION" />
+        </property>
+        <property name="cpsTotalCommission">
+            <column name="CPS_TOTAL_COMMISSION" />
+        </property>
+        <property name="cpsTotalPrice">
+            <column name="CPS_TOTAL_PRICE" />
+        </property>
+            <property name="cpmViewNo">
+            <column name="CPM_VIEW_NO" />
+        </property>
+        <property name="cpmPubCommission">
+            <column name="CPM_PUB_COMMISSION" />
+        </property>
+        <property name="cpmTotalCommission">
+            <column name="CPM_TOTAL_COMMISSION" />
+        </property>
+    </class>
+    
+    <sql-query name="StatsCampaignDailyDao.getSumStatsByCampRangeTime">
+        <return-scalar column="views" type="int"/>
+        <return-scalar column="clicks" type="int"/>
+        <return-scalar column="cpcCommission" type="int"/>
+        <return-scalar column="cpsCommission" type="int"/>
+        <return-scalar column="cpmViews" type="int"/>
+        <return-scalar column="cpmCommission" type="java.math.BigDecimal"/>
+        <return-scalar column="cpcClicks" type="int"/>
+        SELECT SUM(views) views, 
+            SUM(clicks) clicks,
+            SUM(CPC_TOTAL_COMMISSION) cpcCommission,
+            SUM(CPS_TOTAL_COMMISSION) cpsCommission, 
+            SUM(CPM_VIEW_NO) cpmViews,
+            SUM(CPM_TOTAL_COMMISSION) cpmCommission, 
+            SUM(CPC_CLICK_NO) cpcClicks
+        FROM stats_campaign_daily
+        WHERE CAMPAIGN_ID = :campaignId AND DATE_DAY BETWEEN :start AND :end
+    </sql-query>
+    
+    <sql-query name="StatsCampaignDailyDao.sumCampStatsByAdvertiserIdWithRangeDate">
+        <return-scalar column="views" type="int"/>
+        <return-scalar column="clicks" type="int"/>
+        <return-scalar column="cpcCommission" type="int"/>
+        <return-scalar column="cpsCommission" type="int"/>
+        <return-scalar column="cpmViews" type="int"/>
+        <return-scalar column="cpmCommission" type="java.math.BigDecimal"/>
+        SELECT SUM(views) views, SUM(clicks) clicks,SUM(CPC_TOTAL_COMMISSION) cpcCommission,SUM(CPS_TOTAL_COMMISSION) cpsCommission, SUM(CPM_VIEW_NO) cpmViews,SUM(CPM_TOTAL_COMMISSION) cpmCommission
+        FROM stats_campaign_daily
+        WHERE ADVERTISER_ID = :advId AND DATE_DAY BETWEEN :start AND :end
+    </sql-query>
+    
+    <sql-query name="StatsCampaignDailyDao.sumCampStatsWithRangeDate">
+        <return-scalar column="views" type="int"/>
+        <return-scalar column="clicks" type="int"/>
+        <return-scalar column="cpcCommission" type="int"/>
+        <return-scalar column="cpsCommission" type="int"/>
+        <return-scalar column="cpmViews" type="int"/>
+        <return-scalar column="cpmCommission" type="java.math.BigDecimal"/>
+        SELECT SUM(views) views, SUM(clicks) clicks,SUM(CPC_TOTAL_COMMISSION) cpcCommission,SUM(CPS_TOTAL_COMMISSION) cpsCommission, SUM(CPM_VIEW_NO) cpmViews,SUM(CPM_TOTAL_COMMISSION) cpmCommission
+        FROM stats_campaign_daily
+        WHERE DATE_DAY BETWEEN :start AND :end
+    </sql-query>
+
+    <sql-query name="StatsCampaignDailyDao.sumCampStatsByCampIdBeforeTime">
+        <return-scalar column="views" type="int"/>
+        <return-scalar column="clicks" type="int"/>
+        <return-scalar column="cpcCommission" type="int"/>
+        <return-scalar column="cpsCommission" type="int"/>
+        <return-scalar column="cpmViews" type="int"/>
+        <return-scalar column="cpmCommission" type="java.math.BigDecimal"/>
+        SELECT SUM(views) views, SUM(clicks) clicks,SUM(CPC_TOTAL_COMMISSION) cpcCommission,SUM(CPS_TOTAL_COMMISSION) cpsCommission, SUM(CPM_VIEW_NO) cpmViews,SUM(CPM_TOTAL_COMMISSION) cpmCommission
+        FROM stats_campaign_daily
+        WHERE CAMPAIGN_ID=:campaignId AND DATE_DAY <![CDATA[<= :end ]]>
+    </sql-query>
+    
+    <sql-query name="StatsCampaignDailyDao.listAllCampStats">
+        <return-scalar column="dateDay" type="date"/>
+        <return-scalar column="views" type="int"/>
+        <return-scalar column="clicks" type="int"/>
+        <return-scalar column="cpcComm" type="int"/>
+        <return-scalar column="cpsComm" type="int"/>
+        <return-scalar column="cpmViews" type="int"/>
+        <return-scalar column="cpmCommission" type="java.math.BigDecimal"/>
+        SELECT date_day dateDay, SUM(views) views, SUM(CPC_CLICK_NO) clicks, SUM(CPC_TOTAL_COMMISSION) cpcComm, SUM(CPS_TOTAL_COMMISSION) cpsComm, SUM(CPM_VIEW_NO) cpmViews,SUM(CPM_TOTAL_COMMISSION) cpmCommission
+        FROM stats_campaign_daily
+        WHERE advertiser_id = :advId and date_day between :start and :end
+        GROUP BY date_day
+        ORDER BY date_day DESC
+    </sql-query>
+    
+    <sql-query name="StatsCampaignDailyDao.adminViewAllCampStats">
+        <return-scalar column="dateDay" type="date"/>
+        <return-scalar column="views" type="int"/>
+        <return-scalar column="clicks" type="int"/>
+        <return-scalar column="cpcComm" type="int"/>
+        <return-scalar column="cpsComm" type="int"/>
+        <return-scalar column="cpmViews" type="int"/>
+        <return-scalar column="cpmCommission" type="java.math.BigDecimal"/>
+        SELECT date_day dateDay, SUM(views) views, SUM(CPC_CLICK_NO) clicks, SUM(CPC_TOTAL_COMMISSION) cpcComm, SUM(CPS_TOTAL_COMMISSION) cpsComm, SUM(CPM_VIEW_NO) cpmViews,SUM(CPM_TOTAL_COMMISSION) cpmCommission
+        FROM stats_campaign_daily
+        WHERE date_day between :start and :end
+        GROUP BY date_day
+        ORDER BY date_day DESC
+    </sql-query>
+    
+    <sql-query name="StatsCampaignDailyDao.pageAllCampStats">
+        <return-scalar column="dateDay" type="date"/>
+        <return-scalar column="views" type="int"/>
+        <return-scalar column="clicks" type="int" />
+        <return-scalar column="cpcClicks" type="int"/>
+        <return-scalar column="cpmViews" type="int" />
+        <return-scalar column="cpmClicks" type="int" />
+        <return-scalar column="cpsOrders" type="int"/>
+        <return-scalar column="cpsComm" type="int"/>
+        <return-scalar column="cpcComm" type="int"/>
+        <return-scalar column="cpmComm" type="java.math.BigDecimal"/>
+        SELECT date_day dateDay, SUM(views) views, SUM(clicks) clicks,SUM(CPM_VIEW_NO) cpmViews, SUM(CPM_CLICK_NO) cpmClicks, SUM(CPC_CLICK_NO) cpcClicks, SUM(CPS_ORDER_NO) cpsOrders, SUM(CPM_TOTAL_COMMISSION) cpmComm,SUM(CPC_TOTAL_COMMISSION) cpcComm, SUM(CPS_TOTAL_COMMISSION) cpsComm
+        FROM stats_campaign_daily
+        WHERE advertiser_id = :advId and date_day between :start and :end
+        GROUP BY date_day
+        ORDER BY date_day DESC
+    </sql-query>
+    
+    <sql-query name="StatsCampaignDailyDao.pageAllCampStats.count">
+        <return-scalar column="count" type="int"/>
+        SELECT COUNT(*) count FROM (
+        SELECT date_day dateDay
+        FROM stats_campaign_daily
+        WHERE advertiser_id = :advId and date_day between :start and :end
+        GROUP BY date_day ) t
+    </sql-query>
+    
+    <sql-query name="StatsCampaignDailyDao.adminPageAllCampStats">
+        <return-scalar column="dateDay" type="date"/>
+        <return-scalar column="views" type="int"/>
+        <return-scalar column="clicks" type="int" />
+        <return-scalar column="cpcClicks" type="int"/>
+        <return-scalar column="cpmViews" type="int" />
+        <return-scalar column="cpmClicks" type="int" />
+        <return-scalar column="cpsOrders" type="int"/>
+        <return-scalar column="cpsComm" type="int"/>
+        <return-scalar column="cpcComm" type="int"/>
+        <return-scalar column="cpmComm" type="java.math.BigDecimal"/>
+        SELECT date_day dateDay, SUM(views) views, SUM(clicks) clicks,SUM(CPM_VIEW_NO) cpmViews, SUM(CPM_CLICK_NO) cpmClicks, SUM(CPC_CLICK_NO) cpcClicks, SUM(CPS_ORDER_NO) cpsOrders, SUM(CPM_TOTAL_COMMISSION) cpmComm,SUM(CPC_TOTAL_COMMISSION) cpcComm, SUM(CPS_TOTAL_COMMISSION) cpsComm
+        FROM stats_campaign_daily
+        WHERE date_day between :start and :end
+        GROUP BY date_day
+        ORDER BY date_day DESC
+    </sql-query>
+    
+    <sql-query name="StatsCampaignDailyDao.adminPageAllCampStats.count">
+        <return-scalar column="count" type="int"/>
+        SELECT COUNT(*) count FROM (
+        SELECT date_day dateDay
+        FROM stats_campaign_daily
+        WHERE date_day between :start and :end
+        GROUP BY date_day ) t
+    </sql-query>
+    
+    <sql-query name="StatsCampaignDailyDao.pageCampStatsByCampId">
+        <return-scalar column="dateDay" type="date"/>
+        <return-scalar column="views" type="int"/>
+        <return-scalar column="clicks" type="int" />
+        <return-scalar column="cpcClicks" type="int"/>
+        <return-scalar column="cpmViews" type="int" />
+        <return-scalar column="cpmClicks" type="int" />
+        <return-scalar column="cpsOrders" type="int"/>
+        <return-scalar column="cpsComm" type="int"/>
+        <return-scalar column="cpcComm" type="int"/>
+        <return-scalar column="cpmComm" type="java.math.BigDecimal"/>
+        SELECT date_day dateDay, views views, clicks clicks, cpm_view_no cpmViews, cpm_click_no cpmClicks, cpc_click_no cpcClicks, cps_order_no cpsOrders, cps_total_commission cpsComm,  cpc_total_commission cpcComm, cpm_total_commission cpmComm
+        FROM stats_campaign_daily
+        WHERE campaign_id = :campId and date_day between :start and :end
+        ORDER BY date_day desc
+    </sql-query>
+    
+    <sql-query name="StatsCampaignDailyDao.pageCampStatsByCampId.count">
+        <return-scalar column="count" type="int"/>
+        SELECT COUNT(*) count
+        FROM stats_campaign_daily
+        WHERE campaign_id = :campId and date_day between :start and :end
+    </sql-query>
+
+    <sql-query name="StatsCampaignDailyDao.pageCampStatsByCampIdBeforeDate">
+        <return-scalar column="dateDay" type="date"/>
+        <return-scalar column="views" type="int"/>
+        <return-scalar column="clicks" type="int" />
+        <return-scalar column="cpcClicks" type="int"/>
+        <return-scalar column="cpmViews" type="int" />
+        <return-scalar column="cpmClicks" type="int" />
+        <return-scalar column="cpsOrders" type="int"/>
+        <return-scalar column="cpsComm" type="int"/>
+        <return-scalar column="cpcComm" type="int"/>
+        <return-scalar column="cpmComm" type="java.math.BigDecimal"/>
+        SELECT date_day dateDay, views views, clicks clicks, cpm_view_no cpmViews, cpm_click_no cpmClicks, cpc_click_no cpcClicks, cps_order_no cpsOrders, cps_total_commission cpsComm,  cpc_total_commission cpcComm, cpm_total_commission cpmComm
+        FROM stats_campaign_daily
+        WHERE campaign_id = :campId and date_day <![CDATA[<= :end]]>
+        ORDER BY date_day desc
+
+    </sql-query>
+
+    <sql-query name="StatsCampaignDailyDao.pageCampStatsByCampIdBeforeDate.count">
+        <return-scalar column="count" type="int"/>
+        SELECT COUNT(*) count
+        FROM stats_campaign_daily
+        WHERE campaign_id = :campId and date_day  <![CDATA[<= :end ]]>
+    </sql-query>
+    
+    <query name="StatsCampaignDailyDao.getAdCampaignStatsByCampaignIdDaily">
+        select new AdCampaignDailyStatistic(dateDay, sum(views), sum(clicks), sum(cpcClickNo), sum(cpmViewNo),
+            sum(cpcTotalCommission), sum(cpsTotalCommission),  sum(cpmTotalCommission))
+        from AdCampaignDailyStatistic where campaignId = :campaignId
+        and dateDay >= :startDate and dateDay <![CDATA[<= :endDate]]>  
+        group by dateDay
+        order by dateDay desc
+    </query>
+
+    <sql-query name="StatsCampaignDailyDao.listStatsViewByCampType">
+        <return-scalar column="campId" type="int"/>
+        <return-scalar column="views" type="int"/>
+        <return-scalar column="clicks" type="int"/>
+        <return-scalar column="cpcCommission" type="int"/>
+        <return-scalar column="cpsCommission" type="int"/>
+        <return-scalar column="cpmViews" type="int"/>
+        <return-scalar column="cpmCommission" type="java.math.BigDecimal"/>
+        <return-scalar column="cpcClicks" type="int"/>
+        <return-scalar column="cpsOrders" type="int"/>
+        SELECT  CAMPAIGN_ID campId, 
+	            SUM(views) views, 
+	            SUM(clicks) clicks,
+	            SUM(CPC_TOTAL_COMMISSION) cpcCommission, 
+	            SUM(CPS_TOTAL_COMMISSION) cpsCommission,  
+	            SUM(CPM_VIEW_NO) cpmViews,
+	            SUM(CPM_TOTAL_COMMISSION) cpmCommission,
+	            SUM(CPC_CLICK_NO) cpcClicks, 
+	            SUM(CPS_ORDER_NO) cpsOrders
+        FROM stats_campaign_daily 
+        WHERE   CAMPAIGN_ID in (:campIds) 
+                AND DATE_DAY BETWEEN :startDate AND :endDate 
+        GROUP BY    CAMPAIGN_ID 
+    </sql-query>
+    
+    <sql-query name="StatsCampaignDailyDao.getAdvertiserPayByDay">
+        <return-scalar column="advertiser_id" type="int"/>
+        <return-scalar column="cpcComm" type="int"/>
+        <return-scalar column="cpmComm" type="java.math.BigDecimal"/>
+        select advertiser_id, sum(cpc_total_commission) cpcComm, sum(cpm_total_commission) cpmComm from stats_campaign_daily
+        where date_day = :dateDay group by advertiser_id
+    </sql-query>
+    
+    <sql-query name="StatsCampaignDailyDao.updateCampDailyProportion">
+        UPDATE  stats_campaign_daily
+        SET     CPC_PUB_COMMISSION = :cpcPubComm,
+                CPS_PUB_COMMISSION = :cpsPubComm,
+                CPM_PUB_COMMISSION = :cpmPubComm
+        WHERE   CAMPAIGN_ID = :campId
+                AND     DATE_DAY = :dateDay
+                AND     NETWORK = :network
+    </sql-query>
+    
+</hibernate-mapping>

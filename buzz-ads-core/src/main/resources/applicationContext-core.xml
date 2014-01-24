@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<beans xmlns="http://www.springframework.org/schema/beans"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:context="http://www.springframework.org/schema/context"
+    xmlns:util="http://www.springframework.org/schema/util" 
+    xmlns:aop="http://www.springframework.org/schema/aop" 
+    xmlns:p="http://www.springframework.org/schema/p"
+    xsi:schemaLocation="http://www.springframework.org/schema/beans
+      http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+      http://www.springframework.org/schema/util
+      http://www.springframework.org/schema/util/spring-util-3.0.xsd
+      http://www.springframework.org/schema/context 
+      http://www.springframework.org/schema/context/spring-context-3.0.xsd 
+      http://www.springframework.org/schema/aop 
+      http://www.springframework.org/schema/aop/spring-aop-3.0.xsd"
+    default-autowire="byName">
+    
+    
+    <bean class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+        <property name="locations"><list>
+            <value>classpath:config-core.properties</value>
+            <value>classpath:config.properties</value>
+            <value>classpath:config-test.properties</value>
+            <value>classpath:config-local.properties</value>
+        </list></property>
+        <property name="ignoreResourceNotFound" value="true"></property>
+    </bean>
+    
+    <context:annotation-config/>
+    <context:component-scan base-package="com.buzzinate.buzzads.core"></context:component-scan>
+    
+    
+    <!-- Spring security configuration start -->
+    <bean id="roleHierarchy" class="org.springframework.security.access.hierarchicalroles.RoleHierarchyImpl">
+        <property name="hierarchy">
+            <value>
+                ROLE_ADVERTISER > ROLE_USER
+                ROLE_PUBLISHER > ROLE_USER
+                ROLE_AD_ADMIN > ROLE_USER
+                ROLE_SUPER_ADMIN > ROLE_AD_ADMIN
+            </value>
+        </property>
+    </bean>
+    
+
+    <bean id="serviceProperties"
+        class="org.springframework.security.cas.ServiceProperties"
+        p:service="${auth.client}/authentication"
+        p:sendRenew="false"/>
+    
+    <bean id="casEntryPoint"
+        class="com.buzzinate.buzzads.sso.CasAuthenticationEntryPoint"
+        p:serviceProperties-ref="serviceProperties" p:loginUrl="${auth.server}/login" 
+        p:source="${auth.source}"/>
+        
+    <bean id="casFilter"
+        class="org.springframework.security.cas.web.CasAuthenticationFilter"
+        p:authenticationManager-ref="authenticationManager"
+        p:serviceProperties-ref="serviceProperties"
+        p:proxyGrantingTicketStorage-ref="pgtStorage"
+        p:proxyReceptorUrl="/j_spring_cas_security_proxyreceptor"
+        p:filterProcessesUrl="/authentication">
+        
+        <property name="authenticationSuccessHandler" ref="customAuthenticationSuccessHandler" />
+    </bean>
+    
+    <bean id="customAuthenticationSuccessHandler" class="com.buzzinate.buzzads.sso.CustomAuthenticationSuccessHandler">
+        <property name="targetUrlParameter" value="targetUrl" />
+    </bean>
+
+    <!-- This filter handles a Single Logout Request from the CAS Server -->
+    <bean id="singleLogoutFilter" class="org.jasig.cas.client.session.SingleSignOutFilter" />
+    
+    <!-- This filter redirects to the CAS Server to signal Single Logout should 
+        be performed -->
+    <bean id="requestSingleLogoutFilter"
+        class="org.springframework.security.web.authentication.logout.LogoutFilter">
+        <constructor-arg value="${auth.server}/logout?service=${auth.client}" />
+        <constructor-arg>
+            <bean class="org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler" />
+        </constructor-arg>
+        <property name="filterProcessesUrl" value="/logout" />
+    </bean>
+  
+    <!--
+        NOTE: In a real application you should not use an in memory implementation. You will also want
+              to ensure to clean up expired tickets by calling ProxyGrantingTicketStorage.cleanup()
+     -->
+    <bean id="pgtStorage" class="org.jasig.cas.client.proxy.ProxyGrantingTicketStorageImpl"/>
+    
+    <bean id="ticketValidator" class="org.jasig.cas.client.validation.Cas20ProxyTicketValidator"
+        p:acceptAnyProxy="true"
+        p:encoding="utf-8"
+        p:proxyCallbackUrl="${auth.client}/j_spring_cas_security_proxyreceptor"
+        p:proxyGrantingTicketStorage-ref="pgtStorage">
+        <constructor-arg value="${auth.server}/" />
+    </bean>
+    
+    <bean id="userDetailsService" class="com.buzzinate.buzzads.user.UserDetailServiceImpl" />
+    
+    <bean id="casAuthProvider" class="org.springframework.security.cas.authentication.CasAuthenticationProvider"
+        p:serviceProperties-ref="serviceProperties"
+        p:key="a63jgh">
+        <property name="authenticationUserDetailsService">
+            <bean
+                class="org.springframework.security.core.userdetails.UserDetailsByNameServiceWrapper">
+                <constructor-arg ref="userDetailsService" />
+            </bean>
+        </property>
+        <property name="ticketValidator" ref="ticketValidator" />
+        <property name="statelessTicketCache">
+            <bean class="org.springframework.security.cas.authentication.EhCacheBasedTicketCache">
+                <property name="cache">
+                    <bean class="net.sf.ehcache.Cache"
+                      init-method="initialise"
+                      destroy-method="dispose">
+                        <constructor-arg value="casTickets"/>
+                        <constructor-arg value="50"/>
+                        <constructor-arg value="false"/>
+                        <constructor-arg value="false"/>
+                        <constructor-arg value="3600"/>
+                        <constructor-arg value="900"/>
+                    </bean>
+                </property>
+            </bean>
+        </property>
+    </bean>
+    <!-- Spring security configuration end -->
+</beans>

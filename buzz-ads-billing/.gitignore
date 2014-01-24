@@ -1,0 +1,8 @@
+/.settings
+/.project
+/.classpath
+/target
+/.checkstyle
+/.pmd
+/test-output
+/.codepro

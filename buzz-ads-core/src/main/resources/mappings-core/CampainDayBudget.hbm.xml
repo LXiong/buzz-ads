@@ -1,0 +1,35 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC 
+"-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping>
+    <class name="com.buzzinate.buzzads.domain.CampaignDayBudget" table="ads_campaign_daybudget">
+    
+        <id name="id" column="ID">
+            <generator class="native" />
+        </id>
+        <property name="campId">
+            <column name="CAMP_ID"/>
+        </property>
+        <property name="budgetDay">
+            <column name="BUDGET_DAY"/>
+        </property>
+        <property name="budget">
+            <column name="BUDGET"/>
+        </property>
+    </class>
+    
+    <query name="CampDayBudgetDao.findCampaignDayBudgetByCampId">
+        FROM CampaignDayBudget WHERE campId = :campId
+    </query>
+    
+    <query name="CampDayBudgetDao.deleteByCampaignId">
+        DELETE FROM CampaignDayBudget WHERE campId = :campId
+    </query>
+    
+    <query name="CampDayBudgetDao.findDayBudgetByCampIdAndDate">
+        FROM CampaignDayBudget WHERE campId = :campId and budgetDay = :date
+    </query>
+    
+</hibernate-mapping>

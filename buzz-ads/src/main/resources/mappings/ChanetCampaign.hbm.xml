@@ -1,0 +1,68 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC 
+"-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping>
+    <class name="com.buzzinate.buzzads.domain.ChanetDTO" table="chanet_campaign">
+        <id name="orderId" column="ORDER_ID">
+            <generator class="assigned" />
+        </id>
+        <property name="advertiser">
+            <column name="ADVERTISER"/>
+        </property>
+        <property name="campaignId">
+            <column name="CAMPAIGN_ID"/>
+        </property>
+        <property name="campaignName">
+          <column name="CAMPAIGN_NAME"/>
+        </property>
+        <property name="campaignDomain">
+          <column name="CAMPAIGN_DOMAIN"/>
+        </property>
+        <property name="siteId">
+          <column name="SITE_ID"/>
+        </property>
+        <property name="siteName">
+          <column name="SITE_NAME"/>
+        </property>
+        <property name="advertiserLink">
+          <column name="ADVERTISER_LINK"/>
+        </property>
+        <property name="chanetLink">
+          <column name="CHANET_LINK"/>
+        </property>
+        <property name="ruleXml">
+          <column name="CAMPAIGN_RULES"/>
+        </property>
+        <property name="status" column="STATUS">
+            <type name="com.buzzinate.common.util.hibernate.IntegerValuedEnumType">
+              <param name="enum">com.buzzinate.buzzads.enums.AdStatusEnum</param>
+            </type>
+        </property>
+    </class>
+
+    <query name="ChanetCampaignDao.listLiveChanetCampaign">
+        from ChanetDTO where status = 1 
+    </query>
+    
+    <query name="ChanetCampaignDao.listWantTerminateChanetCamp">
+        from ChanetDTO where status = 1 and campaignId not in (:liveCampIds)
+    </query>
+    
+    <query name="ChanetCampaignDao.getChanetCampaignByCampId">
+        from ChanetDTO where campaignId = :campId 
+    </query>
+
+    <query name="ChanetCampaignDao.updateChanetCampaignStatus">
+        update ChanetDTO set status = :status where campaignId = :campId
+    </query>
+
+    <query name="ChanetCampaignDao.updateChanetLink">
+        update ChanetDTO set chanetLink = :chanetLink where campaignId = :campId and status = 1
+    </query>
+    
+    <query name="ChanetCampaignDao.getChanetCampaigns">
+        from ChanetDTO
+    </query>
+</hibernate-mapping>

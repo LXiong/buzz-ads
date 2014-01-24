@@ -1,0 +1,36 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="
+			http://www.springframework.org/schema/beans 
+			http://www.springframework.org/schema/beans/spring-beans-2.5.xsd">
+
+
+	<!-- 按照Spring的原理，此dataSource将覆盖上方import的dataSource同名bean。单元测试，所有访问数据库的操作都使用此DataSource -->
+	<bean id="dataSource" class="org.unitils.database.UnitilsDataSourceFactoryBean" />
+
+    <!-- 配置sessionFactory，和普通项目一样 -->
+    <bean id="sessionFactory"
+        class="org.springframework.orm.hibernate3.LocalSessionFactoryBean">
+        <property name="dataSource" ref="dataSource" />
+        <property name="mappingLocations">
+            <list>
+                <value>classpath:mappings-core/*.hbm.xml</value>
+            </list>
+        </property>
+        <property name="hibernateProperties">
+            <props>
+                <prop key="hibernate.dialect">org.hibernate.dialect.MySQLDialect</prop>
+                <prop key="hibernate.show_sql">${datasource.hibernate.showsql}</prop>
+                <prop key="hibernate.jdbc.batch_size">1</prop>
+            </props>
+        </property>
+    </bean>
+    
+    <!-- 配置transactionManager，测试时会使用它来管理事务 -->
+    <bean id="transactionManager"
+        class="org.springframework.orm.hibernate3.HibernateTransactionManager">
+        <property name="sessionFactory" ref="sessionFactory" />
+    </bean>
+    
+</beans>

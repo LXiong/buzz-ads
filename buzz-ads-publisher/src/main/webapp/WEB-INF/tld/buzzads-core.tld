@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8"?>  
+<!DOCTYPE taglib PUBLIC "-//Sun Microsystems, Inc.//DTD JSP Tag Library 1.2//EN"  
+           "http://java.sun.com/dtd/web-jsptaglibrary_1_2.dtd">
+
+<taglib>  
+    <tlib-version>2.2.3</tlib-version>  
+    <jsp-version>1.2</jsp-version>  
+    <short-name>buzzads-core</short-name>  
+    <uri>/buzzads-core</uri>  
+    <display-name>"BuzzAds Custom Tags"</display-name>  
+    <description><![CDATA["BuzzAds Custom Tags"]]></description>
+    <tag>  
+        <name>partOfText</name>  
+        <tag-class>com.buzzinate.buzzads.util.taglib.PartOfTextTag</tag-class>  
+        <body-content>JSP</body-content>  
+        <description><![CDATA[Displays the text up to the specified maximum length]]></description>  
+        <attribute>  
+            <name>value</name>  
+            <required>true</required>  
+            <rtexprvalue>true</rtexprvalue>  
+            <description><![CDATA[Specifies the original text to be displayed.]]></description>  
+        </attribute>
+        <attribute>  
+            <name>textmaxlength</name>  
+            <required>true</required>  
+            <rtexprvalue>true</rtexprvalue>  
+            <description><![CDATA[Specifies the maximum length of the text to be displayed.]]></description>  
+        </attribute>
+        <attribute>  
+            <name>escape</name>  
+            <required>false</required>  
+            <rtexprvalue>true</rtexprvalue>  
+            <description><![CDATA[Specifies whether to escape html characters.]]></description>  
+        </attribute>
+    </tag>
+    
+    <tag>  
+        <name>getHref</name>  
+        <tag-class>com.buzzinate.buzzads.util.taglib.GetHrefTag</tag-class>  
+        <body-content>JSP</body-content>  
+        <description><![CDATA[Adds http:// to the beginning of the value if it does not start with it.]]></description>  
+        <attribute>  
+            <name>value</name>  
+            <required>true</required>  
+            <rtexprvalue>true</rtexprvalue>  
+            <description><![CDATA[Specifies the original href link.]]></description>  
+        </attribute>
+        <attribute>  
+            <name>escape</name>  
+            <required>false</required>  
+            <rtexprvalue>true</rtexprvalue>  
+            <description><![CDATA[Specifies whether to escape html characters.]]></description>  
+        </attribute>
+    </tag>
+    
+    <tag>  
+        <name>replaceStrings</name>  
+        <tag-class>com.buzzinate.buzzads.util.taglib.ReplaceStringsTag</tag-class>  
+        <body-content>JSP</body-content>  
+        <description><![CDATA[Replaces last occurrence of strings in the given string.]]></description>  
+        <attribute>  
+            <name>value</name>  
+            <required>true</required>  
+            <rtexprvalue>true</rtexprvalue>  
+            <description><![CDATA[Specifies the original string.]]></description>  
+        </attribute>
+        <attribute>  
+            <name>propertiesList</name>  
+            <required>true</required>  
+            <rtexprvalue>true</rtexprvalue>  
+            <description><![CDATA[Specifies the string to replace in the original string.]]></description>  
+        </attribute>
+        <attribute>  
+            <name>isUrl</name>  
+            <required>false</required>  
+            <rtexprvalue>true</rtexprvalue>  
+            <description><![CDATA[Specifies whether this is an URL or not.]]></description>  
+        </attribute>
+        <attribute>  
+            <name>escape</name>  
+            <required>false</required>  
+            <rtexprvalue>true</rtexprvalue>  
+            <description><![CDATA[Specifies whether to escape html characters.]]></description>  
+        </attribute>
+    </tag> 
+</taglib>

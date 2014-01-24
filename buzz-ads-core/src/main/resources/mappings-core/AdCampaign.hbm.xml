@@ -1,0 +1,69 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC 
+"-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping>
+    <class name="com.buzzinate.buzzads.domain.AdCampaign" table="ad_campaign">
+        <id name="id" column="ID">
+            <generator class="native" />
+        </id>
+        <property name="advertiserId">
+            <column name="ADVERTISER_ID"/>
+        </property>
+        <property name="name">
+          <column name="NAME"/>
+        </property>
+        <property name="status" column="STATUS">
+            <type name="com.buzzinate.common.util.hibernate.IntegerValuedEnumType">
+                <param name="enum">com.buzzinate.buzzads.enums.AdStatusEnum</param>
+            </type>
+        </property>
+        <property name="network" column="NETWORK">
+              <type name="com.buzzinate.common.util.hibernate.IntegerValuedEnumSetType">
+                <param name="enum">com.buzzinate.buzzads.enums.AdNetworkEnum</param>
+              </type>
+        </property>
+        <property name="bidType" column="BID_TYPE">
+              <type name="com.buzzinate.common.util.hibernate.IntegerValuedEnumType">
+                <param name="enum">com.buzzinate.buzzads.enums.BidTypeEnum</param>
+              </type>
+        </property>
+        <property name="startDate">
+          <column name="START_DATE"/>
+        </property>
+        <property name="endDate">
+          <column name="END_DATE"/>
+        </property>
+        <property name="locationStr">
+          <column name="LOCATION"/>
+        </property>
+        <property name="updateAt">
+          <column name="UPDATE_AT"/>
+        </property>
+    </class>
+    
+    <query name="AdCampaignDao.listCampaignIdsByAdvertiserId">
+        select id from AdCampaign where advertiserId = :advertiserId
+    </query>
+    
+    <query name="AdCampaignDao.listCampaignsByAdvertiserId">
+        from AdCampaign where advertiserId = :advertiserId
+    </query>
+    
+    <query name="AdCampaignDao.listActiveCampaignsByAdvertiserId">
+        from AdCampaign where advertiserId = :advertiserId and status = 1
+    </query>
+    
+    <query name="AdCampaignDao.listCampaignsByIds">
+        from AdCampaign where id in ( :campaignIds )
+    </query>
+    
+    <query name="AdCampaignDao.listCampaignsByStatus">
+        from AdCampaign where status = :status
+    </query>
+    
+    <query name="AdCampaignDao.updateAdCampaignStatus">
+        update AdCampaign set status = :status , updateAt = now() where id = :id
+    </query>
+</hibernate-mapping>

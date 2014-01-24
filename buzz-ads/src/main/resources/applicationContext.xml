@@ -1,0 +1,193 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<beans xmlns="http://www.springframework.org/schema/beans"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:context="http://www.springframework.org/schema/context"
+    xmlns:util="http://www.springframework.org/schema/util" 
+    xmlns:aop="http://www.springframework.org/schema/aop" 
+    xmlns:p="http://www.springframework.org/schema/p"
+    xsi:schemaLocation="http://www.springframework.org/schema/beans
+      http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+      http://www.springframework.org/schema/util
+      http://www.springframework.org/schema/util/spring-util-3.0.xsd
+      http://www.springframework.org/schema/context 
+      http://www.springframework.org/schema/context/spring-context-3.0.xsd 
+      http://www.springframework.org/schema/aop 
+      http://www.springframework.org/schema/aop/spring-aop-3.0.xsd"
+    default-autowire="byName">
+    
+    <context:annotation-config/>
+    <context:component-scan base-package="com.buzzinate.buzzads"></context:component-scan>
+    
+    <bean class="org.springframework.aop.framework.autoproxy.DefaultAdvisorAutoProxyCreator" >
+        <property name="proxyTargetClass" value="true" />
+    </bean>
+    
+    <bean class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+        <property name="locations"><list>
+            <value>classpath:config-core.properties</value>
+            <value>classpath:config.properties</value>
+            <value>classpath:config-test.properties</value>
+            <value>classpath:config-local.properties</value>
+        </list></property>
+        <property name="ignoreResourceNotFound" value="true"></property>
+    </bean>
+    
+    <bean id="textProvider" class="com.opensymphony.xwork2.DefaultTextProvider"/>
+        
+    <bean id="messageSource"
+        class="org.springframework.context.support.ResourceBundleMessageSource">
+        <property name="basenames">
+            <list><value>MessageResources</value></list>
+        </property>
+    </bean>
+    
+    <bean id="redirectMessageInterceptor"  class="com.buzzinate.buzzads.struts2.RedirectMessageInterceptor"/>
+    <bean id="exceptionHandlerAction" class="com.buzzinate.buzzads.struts2.ExceptionHandlerAction" />
+    <bean id="logInterceptor"  class="com.buzzinate.buzzads.struts2.LogInterceptor"/>
+    <bean id="advertiserInterceptor"  class="com.buzzinate.buzzads.struts2.AdvertiserInterceptor"/>
+    
+    <bean id="configurationFactory" class="org.apache.commons.configuration.ConfigurationFactory" >
+        <property name="configurationURL" value="classpath:configuration.xml" />
+    </bean>
+    <bean id="configuration" factory-bean="configurationFactory" factory-method="getConfiguration" />
+
+    <bean id="redisClient" class="com.buzzinate.buzzads.core.util.RedisClient" destroy-method="shutdown" >
+        <constructor-arg value="${redis.ips}" />
+    </bean>
+    
+    <bean id="analyticsKestrelClient" class="com.buzzinate.common.util.kestrel.KestrelClient" destroy-method="shutdown">
+        <constructor-arg value="${analytics.kestrel.ips}" />
+        <constructor-arg value="${analytics.kestrel.pool.size}" />
+    </bean>
+    
+    <bean id="eventKestrelClient" class="com.buzzinate.common.util.kestrel.KestrelClient" destroy-method="shutdown">
+        <constructor-arg value="${analytics.kestrel.ips}" />
+        <constructor-arg value="${analytics.kestrel.pool.size}" />
+    </bean>
+    
+    <bean id="loginHelper" class="com.buzzinate.buzzads.user.LoginHelper" />
+    <bean id="userRoleDao" class="com.buzzinate.buzzads.user.UserRoleDao" />
+    <bean id="userRoleServices" class="com.buzzinate.buzzads.user.UserRoleServices" />
+    <bean id="userBaseDao" class="com.buzzinate.buzzads.user.UserBaseDao" />
+    <bean id="userBaseServices" class="com.buzzinate.buzzads.user.UserBaseServices" />
+
+    <!-- Data source and transaction START -->
+    <bean id="dataSourceMainMaster" class="com.jolbox.bonecp.BoneCPDataSource" destroy-method="close">
+        <property name="driverClass" value="com.mysql.jdbc.Driver" />
+        <property name="jdbcUrl" value="jdbc:mysql://${datasource.main.master.ip}/${datasource.main.dbname}?autoReconnect=true&amp;useUnicode=true&amp;characterEncoding=UTF-8" />
+        <property name="username" value="${datasource.main.master.username}"/>
+        <property name="password" value="${datasource.main.master.password}"/>
+        <property name="idleConnectionTestPeriodInMinutes" value="60"/>
+        <property name="idleMaxAgeInMinutes" value="240"/>      
+        <property name="maxConnectionsPerPartition" value="${datasource.main.master.max.connections.per.partition}"/>
+        <property name="minConnectionsPerPartition" value="${datasource.main.master.min.connections.per.partition}"/>
+        <property name="partitionCount" value="${datasource.main.master.partition.count}"/>
+        <property name="acquireIncrement" value="10"/>                              
+        <property name="statementsCacheSize" value="50"/>
+        <property name="releaseHelperThreads" value="3"/>
+        <property name="closeConnectionWatch" value="false"/>
+    </bean>
+     
+    <bean id="dataSourceMainSlave" class="com.jolbox.bonecp.BoneCPDataSource" destroy-method="close">
+        <property name="driverClass" value="com.mysql.jdbc.Driver" />
+        <property name="jdbcUrl" value="jdbc:mysql://${datasource.main.slave.ip}/${datasource.main.dbname}?autoReconnect=true&amp;useUnicode=true&amp;characterEncoding=UTF-8" />
+        <property name="username" value="${datasource.main.slave.username}"/>
+        <property name="password" value="${datasource.main.slave.password}"/>
+        <property name="idleConnectionTestPeriodInMinutes" value="60"/>
+        <property name="idleMaxAgeInMinutes" value="240"/>      
+        <property name="maxConnectionsPerPartition" value="${datasource.main.slave.max.connections.per.partition}"/>
+        <property name="minConnectionsPerPartition" value="${datasource.main.slave.min.connections.per.partition}"/>
+        <property name="partitionCount" value="${datasource.main.slave.partition.count}"/>
+        <property name="acquireIncrement" value="10"/>                              
+        <property name="statementsCacheSize" value="50"/>
+        <property name="releaseHelperThreads" value="3"/>
+        <property name="closeConnectionWatch" value="false"/>
+    </bean>
+
+    <bean id="dataSourceBuzzadsMaster" class="com.jolbox.bonecp.BoneCPDataSource" destroy-method="close">
+        <property name="driverClass" value="com.mysql.jdbc.Driver" />
+        <property name="jdbcUrl" value="jdbc:mysql://${datasource.buzzads.master.ip}/${datasource.buzzads.dbname}?autoReconnect=true&amp;useUnicode=true&amp;characterEncoding=UTF-8" />
+        <property name="username" value="${datasource.buzzads.master.username}"/>
+        <property name="password" value="${datasource.buzzads.master.password}"/>
+        <property name="idleConnectionTestPeriodInMinutes" value="60"/>
+        <property name="idleMaxAgeInMinutes" value="240"/>      
+        <property name="maxConnectionsPerPartition" value="${datasource.buzzads.master.max.connections.per.partition}"/>
+        <property name="minConnectionsPerPartition" value="${datasource.buzzads.master.min.connections.per.partition}"/>
+        <property name="partitionCount" value="${datasource.buzzads.master.partition.count}"/>
+        <property name="acquireIncrement" value="10"/>                              
+        <property name="statementsCacheSize" value="50"/>
+        <property name="releaseHelperThreads" value="3"/>
+        <property name="closeConnectionWatch" value="false"/>
+    </bean>
+    
+    <bean id="dataSourceBuzzadsSlave" class="com.jolbox.bonecp.BoneCPDataSource" destroy-method="close">
+        <property name="driverClass" value="com.mysql.jdbc.Driver" />
+        <property name="jdbcUrl" value="jdbc:mysql://${datasource.buzzads.slave.ip}/${datasource.buzzads.dbname}?autoReconnect=true&amp;useUnicode=true&amp;characterEncoding=UTF-8" />
+        <property name="username" value="${datasource.buzzads.slave.username}"/>
+        <property name="password" value="${datasource.buzzads.slave.password}"/>
+        <property name="idleConnectionTestPeriodInMinutes" value="60"/>
+        <property name="idleMaxAgeInMinutes" value="240"/>      
+        <property name="maxConnectionsPerPartition" value="${datasource.buzzads.slave.max.connections.per.partition}"/>
+        <property name="minConnectionsPerPartition" value="${datasource.buzzads.slave.min.connections.per.partition}"/>
+        <property name="partitionCount" value="${datasource.buzzads.slave.partition.count}"/>
+        <property name="acquireIncrement" value="10"/>                              
+        <property name="statementsCacheSize" value="50"/>
+        <property name="releaseHelperThreads" value="3"/>
+        <property name="closeConnectionWatch" value="false"/>
+    </bean>
+    
+    <bean id="dataSource" class="com.buzzinate.common.util.db.MasterSlaveRoutingDataSource">
+        <property name="targetDataSources">
+            <map>
+                <entry key="main_slave" value-ref="dataSourceMainSlave"/>
+                <entry key="main_master" value-ref="dataSourceMainMaster"/>
+                <entry key="buzzads_slave" value-ref="dataSourceBuzzadsSlave"/>
+                <entry key="buzzads_master" value-ref="dataSourceBuzzadsMaster"/>
+            </map>
+        </property>
+        <property name="dataSourceMap">
+            <list>
+                <value>main: main_master, main_slave</value>
+                <value>buzzads: buzzads_master, buzzads_slave</value>
+            </list>
+        </property>
+        <property name="defaultTargetDataSource" ref="dataSourceBuzzadsMaster"/>
+    </bean>
+    
+    <bean id="sessionFactory"
+        class="org.springframework.orm.hibernate3.LocalSessionFactoryBean">
+        <property name="dataSource" ref="dataSource" />
+        <property name="mappingLocations">
+            <list>
+                <value>classpath:mappings/*.hbm.xml</value>
+                <value>classpath:mappings-core/*.hbm.xml</value>
+            </list>
+        </property>
+        <property name="hibernateProperties">
+            <props>
+                <prop key="hibernate.dialect">org.hibernate.dialect.MySQLDialect</prop>
+                <prop key="hibernate.show_sql">${datasource.hibernate.showsql}</prop>
+                <prop key="hibernate.jdbc.batch_size">1</prop>
+            </props>
+        </property>
+    </bean>
+    
+    <bean id="transactionManager" class="org.springframework.orm.hibernate3.HibernateTransactionManager">
+        <property name="sessionFactory" ref="sessionFactory" />
+    </bean>
+    
+    <bean id="masterSlaveTxInterceptor"
+        class="com.buzzinate.common.util.db.MasterSlaveTransactionInterceptor">
+        <property name="transactionManager" ref="transactionManager" />
+        <property name="transactionAttributeSource">
+            <bean class="org.springframework.transaction.annotation.AnnotationTransactionAttributeSource" />
+        </property>
+        <property name="sessionFactory" ref="sessionFactory" />
+    </bean>
+    
+    <bean id="masterSlaveTxAdvisor" class="org.springframework.transaction.interceptor.TransactionAttributeSourceAdvisor">
+        <property name="transactionInterceptor" ref="masterSlaveTxInterceptor"/>
+    </bean>
+    <!-- Data source and transaction - END -->
+</beans>

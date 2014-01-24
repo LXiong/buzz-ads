@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE validators PUBLIC 
+    "-//OpenSymphony Group//XWork Validator 1.0.2//EN" 
+    "http://www.opensymphony.com/xwork/xwork-validator-1.0.2.dtd">
+
+<validators>
+    <field name="advertiserAccount.companyName">
+        <field-validator type="requiredstring" short-circuit="true">
+            <param name="trim">true</param>
+              <message key="buzzads.advertiser.verify.companyName.empty"></message>
+        </field-validator>
+        <field-validator type="stringlength" short-circuit="true">  
+           <param name="maxLength">50</param>
+           <message key="buzzads.advertiser.companyName.length"></message>  
+        </field-validator>
+        <field-validator type="regex">
+            <param name="expression"><![CDATA[(^[0-9A-Za-z_ \u0100-\uFFFF\.\,\;\-\(\)\&\#]+$)]]></param>
+            <message key="buzzads.advertiser.companyName.error.message"></message>  
+        </field-validator> 
+    </field>
+    
+    <field name="advertiserAccount.websiteName">
+        <field-validator type="requiredstring" short-circuit="true">
+            <param name="trim">true</param>
+            <message key="buzzads.advertiser.verify.websiteName.empty"></message>
+        </field-validator>
+        <field-validator type="regex">
+            <param name="expression"><![CDATA[(^[0-9A-Za-z_ \u0100-\uFFFF\.\,\-]+$)]]></param>
+            <message key="buzzads.advertiser.websiteName.error.message"></message>  
+        </field-validator> 
+        <field-validator type="stringlength" short-circuit="true">  
+           <param name="maxLength">30</param>
+           <message key="buzzads.advertiser.websiteName.length"></message>  
+        </field-validator>
+    </field>
+    
+    <field name="advertiserAccount.websiteUrl">
+        <field-validator type="requiredstring" short-circuit="true">
+            <param name="trim">true</param>
+            <message key="buzzads.advertiser.verify.websiteUrl.empty"></message>
+        </field-validator>
+        <field-validator type="stringlength" short-circuit="true">  
+           <param name="maxLength">30</param>
+           <message key="buzzads.advertiser.websiteUrl.length"></message>  
+        </field-validator>
+    </field>
+    
+    <field name="advertiserContactInfo.address">
+        <field-validator type="requiredstring" short-circuit="true">
+            <param name="trim">true</param>
+            <message key="buzzads.advertiser.verify.address.empty"></message>
+        </field-validator>
+        <field-validator type="regex">
+            <param name="expression"><![CDATA[(^[0-9A-Za-z_ \u0100-\uFFFF\.\,\-]+$)]]></param>
+            <message key="buzzads.advertiser.address.error.message"></message>  
+        </field-validator> 
+        <field-validator type="stringlength" short-circuit="true">  
+           <param name="maxLength">50</param>
+           <message key="buzzads.advertiser.address.length"></message>  
+        </field-validator>
+    </field>
+    
+    <field name="advertiserContactInfo.name">
+        <field-validator type="requiredstring" short-circuit="true">
+            <param name="trim">true</param>
+            <message key="buzzads.advertiser.verify.name.empty"></message>
+        </field-validator>
+        <field-validator type="regex">
+            <param name="expression"><![CDATA[(^[0-9A-Za-z_ \u0100-\uFFFF\.\,\-]+$)]]></param>
+            <message key="buzzads.advertiser.name.error.message"></message>  
+        </field-validator> 
+        <field-validator type="stringlength" short-circuit="true">  
+           <param name="maxLength">20</param>
+           <message key="buzzads.advertiser.name.length"></message>  
+        </field-validator>
+    </field>
+    
+    <field name="advertiserContactInfo.mobile">
+        <field-validator type="requiredstring" short-circuit="true">
+            <param name="trim">true</param>
+            <message key="buzzads.advertiser.verify.mobile.empty"></message>
+        </field-validator>
+        <field-validator type="stringlength" short-circuit="true">  
+           <param name="maxLength">20</param>
+           <message key="buzzads.advertiser.mobile.length"></message>  
+        </field-validator>
+    </field>
+    
+    <field name="advertiserContactInfo.email">
+        <field-validator type="requiredstring" short-circuit="true">
+            <param name="trim">true</param>
+            <message key="buzzads.advertiser.verify.email.empty"></message>
+        </field-validator>
+        <field-validator type="stringlength" short-circuit="true">  
+           <param name="maxLength">30</param>
+           <message key="buzzads.advertiser.email.length"></message>  
+        </field-validator>
+    </field>
+    
+    <field name="advertiserContactInfo.qq">
+        <field-validator type="regex">
+            <param name="expression"><![CDATA[(^[0-9A-Za-z_ \u0100-\uFFFF\.\,\-]+$)]]></param>
+            <message key="buzzads.advertiser.qq.error.message"></message>  
+        </field-validator> 
+        <field-validator type="stringlength" short-circuit="true">  
+           <param name="maxLength">30</param>
+           <message key="buzzads.advertiser.qq.length"></message>  
+        </field-validator>
+    </field>
+</validators>

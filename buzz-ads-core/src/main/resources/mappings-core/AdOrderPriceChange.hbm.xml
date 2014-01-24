@@ -1,0 +1,25 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC 
+"-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping>
+    <class name="com.buzzinate.buzzads.domain.AdOrderPriceChange" table="ad_order_price_change">
+        <id name="id" column="ID">
+            <generator class="native" />
+        </id>
+        <property name="orderId">
+            <column name="ORDER_ID"/>
+        </property>
+        <property name="dateTime">
+            <column name="DATE_TIME"/>
+        </property>
+        <property name="bidPriceOld">
+            <column name="BID_PRICE_OLD"/>
+        </property>
+        <property name="bidPriceNew">
+            <column name="BID_PRICE_NEW"/>
+        </property>
+    </class>
+
+</hibernate-mapping>

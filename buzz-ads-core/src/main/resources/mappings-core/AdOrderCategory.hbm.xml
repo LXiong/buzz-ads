@@ -1,0 +1,34 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC 
+"-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping>
+    <class name="com.buzzinate.buzzads.domain.AdOrderCategory" table="ad_order_category">
+        <id name="id" column="ID">
+            <generator class="native" />
+        </id>
+        
+        <property name="parentId">
+            <column name="PARENT_ID"/>
+        </property>
+        
+        <property name="name">
+            <column name="NAME"/>
+        </property>
+        
+        <property name="enName">
+            <column name="NAME_EN"/>
+        </property>
+    
+    </class>
+    
+    <query name="AdOrderCategory.getParentCategories">
+        from AdOrderCategory where parentId = 0
+    </query>
+    
+    <query name="AdOrderCategory.getSubCategoriesByParent">
+        from AdOrderCategory where parentId = :parentId
+    </query>
+
+</hibernate-mapping>

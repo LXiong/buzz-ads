@@ -1,0 +1,25 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC 
+"-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping>
+    <class name="com.buzzinate.buzzads.user.Role" table="role">
+        <id name="id" column="ID">
+            <generator class="native" />
+        </id>
+        <property name="name" >
+            <column name="NAME" />
+        </property>
+        <property name="descn" >
+            <column name="DESCN" />
+        </property>
+    </class>
+    <query name="getAllRoles"><![CDATA[
+        from Role
+    ]]></query>
+    <sql-query name="role.grantedAuthorities">
+       <return-scalar column="rolename" type="string"/>
+        select r.name as rolename from user_role ur, role r where ur.ROLE_ID = r.ID and ur.USER_ID =:userId
+    </sql-query>
+</hibernate-mapping>

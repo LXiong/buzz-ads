@@ -1,0 +1,40 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC 
+"-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping>
+    <class name="com.buzzinate.buzzads.domain.Site" table="uuid_site">
+        <id name="uuidBytes" type="binary" column="UUID">
+            <generator class="assigned" />
+        </id>
+        <property type="binary" name="secretBytes">
+            <column name="SECRET" />
+        </property>
+        <property name="userId" >
+            <column name="USER_ID" />
+        </property>
+        <property name="url" >
+            <column name="URL" />
+        </property>
+        <property name="name" >
+            <column name="NAME" />
+        </property>
+    </class>
+    <query name="SiteDao.getUuidSiteByUserId">
+            from Site us where us.userId=:userId
+    </query>
+    
+    <query name="SiteDao.getUuidSiteByUuid">
+            from Site us where us.uuidBytes=:uuidBytes
+    </query>
+    
+    <query name="SiteDao.getSiteByName">
+            from Site where name like :name
+    </query>
+
+    <query name="SiteDao.getAllSiteList">
+            from Site
+    </query>
+
+</hibernate-mapping>

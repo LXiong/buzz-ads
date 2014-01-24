@@ -1,0 +1,61 @@
+
+<style>
+	html, body, div, span, applet, object, iframe, p, blockquote, pre,
+	a, abbr, acronym, address, big, cite, code,
+	del, dfn, em, font, img, ins, kbd, q, s, samp,
+	small, strike, strong, tt, var,
+	b, u, i, center, dl, dt, dd, ol, ul, li,
+	fieldset, form, label, legend, button,
+	table, caption, tbody, tfoot, thead, tr, th, td, h1, h2, h3 {
+	    margin: 0;
+	    padding: 0;
+	    border: none;
+	    outline: 0;
+	    font-size: 100%;
+	    vertical-align: baseline;
+	    background: transparent;
+	}
+	#MZADX_440 img {
+	    width: 610px !important; 
+	    height: 75px !important; 
+	}
+</style>
+<script type="text/javascript">
+    (function (doc) {
+        var js = doc.createElement("script"),
+        fs = doc.getElementsByTagName("script")[0];
+        js.charset = "utf-8";
+        js.src = "http://js.miaozhen.com/mz_ad_serving.js";
+        fs.parentNode.insertBefore(js, fs);
+    })(document);
+</script>
+<!-- 秒针投放系统ID=1的广告位所在页面位置 -->
+<div id="MZADX_"></div>
+<!-- 获取具体广告位请求JS，建议放在body闭合结束前 -->
+<script type="text/javascript">
+    (function(win) {
+    	function parseOptions(src) {
+    		var options = {}, g, f, c, a, e;
+    		g = /\?(.*)|#(.*)/.exec(src);
+    		if (g) {
+    			g = g[0].slice(1).replace("+", " ").split(/[&;]/g);
+    			for (f = 0; f < g.length; f++) {
+    				c = g[f].split("=");
+    				a = decodeURIComponent(c[0]);
+    				e = "";
+    				if (c.length != 1) e = decodeURIComponent(c[1]);
+    				options[a] = e;
+    			}
+    		}
+    		return options;
+    	}
+    	var mzData=parseOptions(win.location.href);
+    	document.getElementById("MZADX_").id="MZADX_"+mzData.id;
+    	var params = {};
+    	params["l"] = [ mzData.id ]; //Miaozhen ad placement id ARRAY
+    	params["r"] = "1"; //version
+    	params["_srv"] = "MZADX";
+    	__mz_rpq = win.__mz_rpq || [];
+    	__mz_rpq.push(params);
+    })(window);
+</script>

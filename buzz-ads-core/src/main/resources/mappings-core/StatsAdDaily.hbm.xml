@@ -1,0 +1,188 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC 
+"-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping>
+    <class name="com.buzzinate.buzzads.analytics.stats.AdDailyStatistic" table="stats_ad_daily">
+        <id name="id" column="ID">
+            <generator class="native" />
+        </id>
+        <property name="adOrderId">
+            <column name="ADORDER_ID" />
+        </property>
+        <property name="adEntryId">
+            <column name="ADENTRY_ID" />
+        </property>
+        <property name="network" column="NETWORK">
+            <type name="com.buzzinate.common.util.hibernate.IntegerValuedEnumType">
+                <param name="enum">com.buzzinate.buzzads.enums.AdNetworkEnum</param>
+            </type>
+        </property>
+        <property name="uuid">
+            <column name="UUID"/>
+        </property>
+        <property name="dateDay">
+            <column name="DATE_DAY" />
+        </property>
+        <property name="views">
+            <column name="VIEWS" />
+        </property>
+        <property name="clicks">
+            <column name="CLICKS" />
+        </property>
+        <property name="cpcClickNo">
+            <column name="CPC_CLICK_NO" />
+        </property>
+        <property name="cpcPubCommission">
+            <column name="CPC_PUB_COMMISSION" />
+        </property>
+        <property name="cpcTotalCommission">
+            <column name="CPC_TOTAL_COMMISSION" />
+        </property>
+        <property name="cpsOrderNo">
+            <column name="CPS_ORDER_NO" />
+        </property>
+        <property name="cpsConfirmedCommission">
+            <column name="CPS_CONFIRMED_COMMISSION" />
+        </property>
+        <property name="cpsPubCommission">
+            <column name="CPS_PUB_COMMISSION" />
+        </property>
+        <property name="cpsTotalConfirmedCommission">
+            <column name="CPS_TOTAL_CONFIRMED_COMMISSION" />
+        </property>
+        <property name="cpsTotalCommission">
+            <column name="CPS_TOTAL_COMMISSION" />
+        </property>
+        <property name="cpsTotalPrice">
+            <column name="CPS_TOTAL_PRICE" />
+        </property>
+        <property name="cpmViewNo">
+            <column name="CPM_VIEW_NO" />
+        </property>
+        <property name="cpmTotalCommission">
+            <column name="CPM_TOTAL_COMMISSION" />
+        </property>
+    </class>
+    
+    <sql-query name="StatsAdDailyDao.getAdstatsByEntryId">
+        <return-scalar column="views" type="int"/>
+        <return-scalar column="clicks" type="int"/>
+        <return-scalar column="cpcCommission" type="int"/>
+        <return-scalar column="cpsCommission" type="int"/>
+        <return-scalar column="cpmCommission" type="java.math.BigDecimal"/>
+        SELECT SUM(views) views, SUM(clicks) clicks,SUM(CPC_TOTAL_COMMISSION) cpcCommission,SUM(CPS_TOTAL_COMMISSION) cpsCommission,
+               SUM(CPM_TOTAL_COMMISSION) cpmCommission
+        FROM stats_ad_daily
+        WHERE ADENTRY_ID = :adEntryId AND DATE_DAY BETWEEN :start AND :end    
+    </sql-query>
+    
+    <sql-query name="StatsAdDailyDao.countStats">
+        <return-scalar column="num" type="long"/>
+        select count(distinct adentry_id) num from stats_ad_daily where date_day >= :startDate and date_day <![CDATA[<= :endDate]]>
+    </sql-query>
+    
+    <sql-query name="StatsAdDailyDao.countStatsWithEntryIds">
+        <return-scalar column="num" type="long"/>
+        select count(distinct adentry_id) num from stats_ad_daily where date_day >= :startDate and date_day <![CDATA[<= :endDate]]> and adentry_id in ( :entryIds )
+    </sql-query>
+    
+    <sql-query name="StatsAdDailyDao.queryStats">
+        <return-scalar column="adEntryId" type="int"/>
+        <return-scalar column="views" type="int"/>
+        <return-scalar column="cpsOrderNo" type="int"/>
+        <return-scalar column="cpsTotalCommission" type="int"/>
+        <return-scalar column="cpcClickNo" type="int"/>
+        <return-scalar column="cpcTotalCommission" type="int"/>
+        <return-scalar column="cpsTotalConfirmedCommission" type="int"/>
+        select adentry_id adEntryId,
+               sum(views) views,
+               sum(cps_order_no) cpsOrderNo,
+               sum(cps_total_commission) cpsTotalCommission,
+               sum(cpc_click_no) cpcClickNo,
+               sum(cpc_total_commission) cpcTotalCommission,
+               sum(cps_total_confirmed_commission) cpsTotalConfirmedCommission
+        from stats_ad_daily where date_day >= :startDate and date_day <![CDATA[<= :endDate]]>  
+        group by adentry_id
+    </sql-query>
+    
+    <sql-query name="StatsAdDailyDao.queryStatsWithEntryIds">
+        <return-scalar column="adEntryId" type="int"/>
+        <return-scalar column="views" type="int"/>
+        <return-scalar column="cpsOrderNo" type="int"/>
+        <return-scalar column="cpsTotalCommission" type="int"/>
+        <return-scalar column="cpcClickNo" type="int"/>
+        <return-scalar column="cpcTotalCommission" type="int"/>
+        <return-scalar column="cpsTotalConfirmedCommission" type="int"/>
+        select adentry_id adEntryId,
+               sum(views) views,
+               sum(cps_order_no) cpsOrderNo,
+               sum(cps_total_commission) cpsTotalCommission,
+               sum(cpc_click_no) cpcClickNo,
+               sum(cpc_total_commission) cpcTotalCommission,
+               sum(cps_total_confirmed_commission) cpsTotalConfirmedCommission
+        from stats_ad_daily where date_day >= :startDate and date_day <![CDATA[<= :endDate]]>  and adentry_id in ( :entryIds ) 
+        group by adentry_id
+    </sql-query>
+    
+    <sql-query name="StatsAdDailyDao.querySumsWithEntryIds">
+        <return-scalar column="cpsTotalCommission" type="int"/>
+        <return-scalar column="cpsPubCommission" type="int"/>
+        <return-scalar column="cpcTotalCommission" type="int"/>
+        <return-scalar column="cpcPubCommission" type="int"/>
+        <return-scalar column="cpsTotalConfirmedCommission" type="int"/>
+        select coalesce(sum(cps_total_commission),0) cpsTotalCommission,
+               coalesce(sum(cps_pub_commission),0) cpsPubCommission,
+               coalesce(sum(cpc_total_commission),0) cpcTotalCommission,
+               coalesce(sum(cpc_pub_commission),0) cpcPubCommission,
+               coalesce(sum(cps_total_confirmed_commission),0) cpsTotalConfirmedCommission
+        from stats_ad_daily where date_day >= :startDate and date_day <![CDATA[<= :endDate]]>  and adentry_id in ( :entryIds )
+    </sql-query>
+    
+    <query name="StatsAdDailyDao.getAdStatsByOrderIds">
+        select new AdDailyStatistic(dateDay, sum(views), sum(clicks), sum(cpcClickNo), sum(cpcTotalCommission), sum(cpsTotalCommission))
+        from AdDailyStatistic where dateDay >= :startDate and dateDay <![CDATA[<= :endDate]]>  
+        and adOrderId in (:orderIds)
+        group by dateDay
+        order by dateDay desc
+    </query>
+    
+    <query name="StatsAdDailyDao.getAdStatsByEntryIds">
+        select new AdDailyStatistic(adEntryId, sum(views), sum(clicks), sum(cpcClickNo), sum(cpmViewNo),
+             sum(cpcTotalCommission), sum(cpsTotalCommission), sum(cpmTotalCommission)) 
+        from AdDailyStatistic where adEntryId in (:entryIds) and 
+        dateDay >= :startDate and dateDay <![CDATA[<= :endDate]]>  
+        group by adEntryId
+        order by adEntryId
+    </query>
+    
+    <sql-query name="StatsAdDailyDao.updateAdDailyStatProportion">
+        UPDATE  stats_ad_daily 
+        SET     CPC_PUB_COMMISSION = CPC_TOTAL_COMMISSION * :proportion,
+		        CPS_PUB_COMMISSION = CPS_TOTAL_COMMISSION * :proportion,
+		        CPM_PUB_COMMISSION = CPM_TOTAL_COMMISSION * :proportion
+        WHERE   uuid IN (:uuidList) 
+                AND     DATE_DAY BETWEEN :startDate AND :endDate
+    </sql-query>
+    
+    <sql-query name="StatsAdDailyDao.getOrderInfoByProportion">
+	    <return-scalar column="orderid" type="int"/>
+	    <return-scalar column="dateDay" type="java.util.Date"/>
+	    <return-scalar column="network" type="int"/>
+        <return-scalar column="cpcPubComm" type="int"/>
+        <return-scalar column="cpsPubComm" type="int"/>
+        <return-scalar column="cpmPubComm" type="java.math.BigDecimal"/>
+        SELECT  ADORDER_ID orderid, 
+                DATE_DAY dateDay, 
+                NETWORK network, 
+                SUM(CPC_PUB_COMMISSION) cpcPubComm,
+                SUM(CPS_PUB_COMMISSION) cpsPubComm,
+                SUM(CPM_PUB_COMMISSION) cpmPubComm
+        FROM    stats_ad_daily
+        WHERE   uuid IN (:uuidList) 
+                AND (DATE_DAY BETWEEN :startDate AND :endDate)
+                GROUP BY  ADORDER_ID, DATE_DAY, NETWORK
+    </sql-query>
+      
+</hibernate-mapping>

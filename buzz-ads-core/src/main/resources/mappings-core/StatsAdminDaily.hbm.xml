@@ -1,0 +1,160 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC 
+"-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping>
+    <class name="com.buzzinate.buzzads.analytics.stats.AdminDailyStatistic" table="stats_admin_daily">
+        <id name="id" column="ID">
+            <generator class="native" />
+        </id>
+        <property name="dateDay">
+            <column name="DATE_DAY" />
+        </property>
+        <property name="network" column="NETWORK">
+            <type name="com.buzzinate.common.util.hibernate.IntegerValuedEnumType">
+                <param name="enum">com.buzzinate.buzzads.enums.AdNetworkEnum</param>
+            </type>
+        </property>
+        <property name="views">
+            <column name="VIEWS" />
+        </property>
+        <property name="clicks">
+            <column name="CLICKS" />
+        </property>
+        <property name="cpcViewNo">
+            <column name="CPC_VIEW_NO" />
+        </property>
+        <property name="cpcOriginalClickNo">
+            <column name="CPC_ORIGINAL_CLICK_NO" />
+        </property>
+        <property name="cpcClickNo">
+            <column name="CPC_CLICK_NO" />
+        </property>
+        <property name="cpcPubCommission">
+            <column name="CPC_PUB_COMMISSION" />
+        </property>
+        <property name="cpcTotalCommission">
+            <column name="CPC_TOTAL_COMMISSION" />
+        </property>
+        <property name="cpsViewNo">
+            <column name="CPS_VIEW_NO" />
+        </property>
+        <property name="cpsClickNo">
+            <column name="CPS_CLICK_NO" />
+        </property>
+        <property name="cpsOrderNo">
+            <column name="CPS_ORDER_NO" />
+        </property>
+        <property name="cpsConfirmedCommission">
+            <column name="CPS_CONFIRMED_COMMISSION" />
+        </property>
+        <property name="cpsPubCommission">
+            <column name="CPS_PUB_COMMISSION" />
+        </property>
+        <property name="cpsTotalConfirmedCommission">
+            <column name="CPS_TOTAL_CONFIRMED_COMMISSION" />
+        </property>
+        <property name="cpsTotalCommission">
+            <column name="CPS_TOTAL_COMMISSION" />
+        </property>
+        <property name="cpsTotalPrice">
+            <column name="CPS_TOTAL_PRICE" />
+        </property>
+        <property name="cpmViewNo">
+            <column name="CPM_VIEW_NO" />
+        </property>
+        <property name="cpmClickNo">
+            <column name="CPM_CLICK_NO" />
+        </property>
+		<property name="cpmPubCommission">
+		    <column name="CPM_PUB_COMMISSION" />
+		</property>
+		<property name="cpmTotalCommission">
+		    <column name="CPM_TOTAL_COMMISSION" />
+		</property>
+    </class>
+    
+    <sql-query name="StatsAdminDailyDao.countStats">
+        <return-scalar column="num" type="long"/>
+        select count(distinct date_day) num from stats_admin_daily where date_day >= :startDate and date_day <![CDATA[<= :endDate]]>
+    </sql-query>
+    
+    <sql-query name="StatsAdminDailyDao.queryStats">
+        <return-scalar column="dateDay" type="date"/>
+        <return-scalar column="views" type="int"/>
+        <return-scalar column="clicks" type="int"/>
+        <return-scalar column="cpsClickNo" type="int"/>
+        <return-scalar column="cpsViewNo" type="int"/>
+        <return-scalar column="cpsOrderNo" type="int"/>
+        <return-scalar column="cpsTotalCommission" type="int"/>
+        <return-scalar column="cpsPubCommission" type="int"/>
+        <return-scalar column="cpcViewNo" type="int"/>
+        <return-scalar column="cpcOriginalClickNo" type="int"/>
+        <return-scalar column="cpcClickNo" type="int"/>
+        <return-scalar column="cpcTotalCommission" type="int"/>
+        <return-scalar column="cpcPubCommission" type="int"/>
+        <return-scalar column="cpmViewNo" type="int"/>
+        <return-scalar column="cpmClickNo" type="int"/>
+        <return-scalar column="cpmPubCommission" type="java.math.BigDecimal"/>
+        <return-scalar column="cpmTotalCommission" type="java.math.BigDecimal"/>
+        select date_day dateDay,
+               sum(views) views,
+               sum(clicks) clicks, 
+               sum(cps_view_no) cpsViewNo,
+               sum(cps_click_no) cpsClickNo,
+               sum(cps_order_no) cpsOrderNo,
+               sum(cps_total_commission) cpsTotalCommission,
+               sum(cps_pub_commission) cpsPubCommission,
+               sum(cpc_view_no) cpcViewNo,
+               sum(cpc_original_click_no) cpcOriginalClickNo,
+               sum(cpc_click_no) cpcClickNo,
+               sum(cpc_total_commission) cpcTotalCommission,
+               sum(cpc_pub_commission) cpcPubCommission,
+               sum(cpm_view_no) cpmViewNo,
+               sum(cpm_click_no) cpmClickNo,
+               sum(cpm_pub_commission) cpmPubCommission,
+               sum(cpm_total_commission) cpmTotalCommission
+        from stats_admin_daily where date_day >= :startDate and date_day <![CDATA[<= :endDate]]>  
+        group by date_day order by date_day desc
+    </sql-query>
+    
+    <sql-query name="StatsAdminDailyDao.queryChartStats">
+        <return-scalar column="dateDay" type="date"/>
+        <return-scalar column="cpsTotalCommission" type="int"/>
+        <return-scalar column="cpcTotalCommission" type="int"/>
+        select date_day dateDay,
+               sum(cps_total_commission) cpsTotalCommission,
+               sum(cpc_total_commission) cpcTotalCommission
+        from stats_admin_daily where date_day >= :startDate and date_day <![CDATA[<= :endDate]]>  
+        group by date_day order by date_day
+    </sql-query>
+    
+    <sql-query name="StatsAdminDailyDao.querySums">
+        <return-scalar column="cpsTotalCommission" type="int"/>
+        <return-scalar column="cpsPubCommission" type="int"/>
+        <return-scalar column="cpcTotalCommission" type="int"/>
+        <return-scalar column="cpcPubCommission" type="int"/>
+        <return-scalar column="cpsTotalConfirmedCommission" type="int"/>
+        <return-scalar column="cpmTotalCommission" type="java.math.BigDecimal"/>
+        <return-scalar column="cpmPubCommission" type="java.math.BigDecimal"/>
+        select coalesce(sum(cps_total_commission),0) cpsTotalCommission,
+               coalesce(sum(cps_pub_commission),0) cpsPubCommission,
+               coalesce(sum(cpc_total_commission),0) cpcTotalCommission,
+               coalesce(sum(cpc_pub_commission),0) cpcPubCommission,
+               coalesce(sum(cps_total_confirmed_commission),0) cpsTotalConfirmedCommission,
+               coalesce(sum(cpm_total_commission),0) cpmTotalCommission,
+               coalesce(sum(cpm_pub_commission),0) cpmPubCommission
+        from stats_admin_daily where date_day >= :startDate and date_day <![CDATA[<= :endDate]]>
+    </sql-query>
+
+    <sql-query name="StatsAdminDailyDao.updateAdminDailyProportion">
+        UPDATE  stats_admin_daily
+        SET     CPC_PUB_COMMISSION = :cpcPubComm,
+                CPS_PUB_COMMISSION = :cpsPubComm,
+                CPM_PUB_COMMISSION = :cpmPubComm
+        WHERE   DATE_DAY = :dateDay
+                AND     NETWORK = :network
+    </sql-query>
+
+</hibernate-mapping>

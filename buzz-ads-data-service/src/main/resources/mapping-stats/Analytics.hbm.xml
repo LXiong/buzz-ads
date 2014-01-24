@@ -1,0 +1,154 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC
+"-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping>
+    <!-- For table in analytics db -->
+
+    <sql-query name="statAdDaily.insertOrUpdate">
+        insert into stats_ad_daily
+        (adentry_id, date_day, network, uuid, adorder_id, views, clicks,
+            cps_order_no, cps_confirmed_commission, cps_pub_commission, 
+            cps_total_confirmed_commission, cps_total_commission, cps_total_price,
+            cpm_view_no, cpm_click_no, cpm_pub_commission, cpm_total_commission)
+        values
+        (:adentryId, DATE(:date), :network, :uuid, :adorderId, :viewCount, :clickCount,
+            :cpsOrderNo, :cpsConfirmedCommission, :cpsPubCommission, 
+            :cpsTotalConfirmedCommission, :cpsTotalCommission, :cpsTotalPrice,
+            :cpmViewNo, :cpmClickNo, :cpmPubCommission, :cpmTotalCommission)
+        on duplicate key update
+            views = views + :viewCount,
+            clicks = clicks + :clickCount,
+            cps_order_no = cps_order_no + :cpsOrderNo,
+            cps_confirmed_commission = cps_confirmed_commission + :cpsConfirmedCommission,
+            cps_pub_commission = cps_pub_commission + :cpsPubCommission,
+            cps_total_confirmed_commission = cps_total_confirmed_commission + :cpsTotalConfirmedCommission,
+            cps_total_commission = cps_total_commission + :cpsTotalCommission,
+            cps_total_price = cps_total_price + :cpsTotalPrice,
+            cpm_view_no = cpm_view_no + :cpmViewNo,
+            cpm_click_no = cpm_click_no + :cpmClickNo,
+            cpm_pub_commission = cpm_pub_commission + :cpmPubCommission,
+            cpm_total_commission = cpm_total_commission + :cpmTotalCommission
+    </sql-query>
+    
+    <sql-query name="statAdOrderDaily.insertOrUpdate">
+        insert into stats_order_daily
+        (order_id, date_day, network, views, clicks,
+            cps_order_no, cps_confirmed_commission, cps_pub_commission, 
+            cps_total_confirmed_commission, cps_total_commission, cps_total_price,
+            cpm_view_no, cpm_click_no, cpm_pub_commission, cpm_total_commission)
+        values
+        (:orderId, DATE(:date), :network, :viewCount, :clickCount,
+            :cpsOrderNo, :cpsConfirmedCommission, :cpsPubCommission, 
+            :cpsTotalConfirmedCommission, :cpsTotalCommission, :cpsTotalPrice,
+            :cpmViewNo, :cpmClickNo, :cpmPubCommission, :cpmTotalCommission)
+        on duplicate key update
+            views = views + :viewCount,
+            clicks = clicks + :clickCount,
+            cps_order_no = cps_order_no + :cpsOrderNo,
+            cps_confirmed_commission = cps_confirmed_commission + :cpsConfirmedCommission,
+            cps_pub_commission = cps_pub_commission + :cpsPubCommission,
+            cps_total_confirmed_commission = cps_total_confirmed_commission + :cpsTotalConfirmedCommission,
+            cps_total_commission = cps_total_commission + :cpsTotalCommission,
+            cps_total_price = cps_total_price + :cpsTotalPrice,
+            cpm_view_no = cpm_view_no + :cpmViewNo,
+            cpm_click_no = cpm_click_no + :cpmClickNo,
+            cpm_pub_commission = cpm_pub_commission + :cpmPubCommission,
+            cpm_total_commission = cpm_total_commission + :cpmTotalCommission
+    </sql-query>
+    
+    <sql-query name="statAdCampaignDaily.insertOrUpdate">
+        insert into stats_campaign_daily
+        (campaign_id, date_day, network, advertiser_id, views, clicks,
+            cps_order_no, cps_confirmed_commission, cps_pub_commission, 
+            cps_total_confirmed_commission, cps_total_commission, cps_total_price,
+            cpm_view_no, cpm_click_no, cpm_pub_commission, cpm_total_commission)
+        values
+        (:campaignId, DATE(:date), :network, :advertiserId, :viewCount, :clickCount,
+            :cpsOrderNo, :cpsConfirmedCommission, :cpsPubCommission, 
+            :cpsTotalConfirmedCommission, :cpsTotalCommission, :cpsTotalPrice,
+            :cpmViewNo, :cpmClickNo, :cpmPubCommission, :cpmTotalCommission)
+        on duplicate key update
+            views = views + :viewCount,
+            clicks = clicks + :clickCount,
+            cps_order_no = cps_order_no + :cpsOrderNo,
+            cps_confirmed_commission = cps_confirmed_commission + :cpsConfirmedCommission,
+            cps_pub_commission = cps_pub_commission + :cpsPubCommission,
+            cps_total_confirmed_commission = cps_total_confirmed_commission + :cpsTotalConfirmedCommission,
+            cps_total_commission = cps_total_commission + :cpsTotalCommission,
+            cps_total_price = cps_total_price + :cpsTotalPrice,
+            cpm_view_no = cpm_view_no + :cpmViewNo,
+            cpm_click_no = cpm_click_no + :cpmClickNo,
+            cpm_pub_commission = cpm_pub_commission + :cpmPubCommission,
+            cpm_total_commission = cpm_total_commission + :cpmTotalCommission
+    </sql-query>
+
+    <sql-query name="statsPublishDaily.insertOrUpdate">
+        insert into stats_publisher_daily
+        (uuid, date_day, network, views, clicks,
+            cps_order_no, cps_confirmed_commission, cps_pub_commission, 
+            cps_total_confirmed_commission, cps_total_commission, cps_total_price,
+            cpm_view_no, cpm_pub_commission, cpm_total_commission, pageview)
+        values
+        (:uuid, DATE(:date), :network, :viewCount, :clickCount,
+            :cpsOrderNo, :cpsConfirmedCommission, :cpsPubCommission, 
+            :cpsTotalConfirmedCommission, :cpsTotalCommission, :cpsTotalPrice,
+            :cpmViewNo, :cpmPubCommission, :cpmTotalCommission, :pageView)
+        on duplicate key update
+            views = views + :viewCount,
+            clicks = clicks + :clickCount,
+            cps_order_no = cps_order_no + :cpsOrderNo,
+            cps_confirmed_commission = cps_confirmed_commission + :cpsConfirmedCommission,
+            cps_pub_commission = cps_pub_commission + :cpsPubCommission,
+            cps_total_confirmed_commission = cps_total_confirmed_commission + :cpsTotalConfirmedCommission,
+            cps_total_commission = cps_total_commission + :cpsTotalCommission,
+            cps_total_price = cps_total_price + :cpsTotalPrice,
+            cpm_view_no = cpm_view_no + :cpmViewNo,
+            cpm_pub_commission = cpm_pub_commission + :cpmPubCommission,
+            cpm_total_commission = cpm_total_commission + :cpmTotalCommission,
+            pageview = pageview + :pageView
+    </sql-query>
+
+    <sql-query name="statsAdminDaily.insertOrUpdate">
+        insert into stats_admin_daily
+        (date_day, network, views, clicks, cpc_view_no, cpc_original_click_no, cps_view_no,
+            cps_click_no, cps_order_no, cps_confirmed_commission, cps_pub_commission, 
+            cps_total_confirmed_commission, cps_total_commission, cps_total_price,
+            cpm_view_no, cpm_click_no, cpm_pub_commission, cpm_total_commission)
+        values
+        (DATE(:date), :network, :viewCount, :clickCount, :cpcViewNo, :cpcOrigclickNo, :cpsViewNo,
+            :cpsClickNo, :cpsOrderNo, :cpsConfirmedCommission, :cpsPubCommission, 
+            :cpsTotalConfirmedCommission, :cpsTotalCommission, :cpsTotalPrice,
+            :cpmViewNo, :cpmClickNo, :cpmPubCommission, :cpmTotalCommission)
+        on duplicate key update
+            views = views + :viewCount,
+            clicks = clicks + :clickCount,
+            cpc_view_no = cpc_view_no + :cpcViewNo,
+            cpc_original_click_no = cpc_original_click_no + :cpcOrigclickNo,
+            cps_view_no = cps_view_no + :cpsViewNo,
+            cps_click_no = cps_click_no + :cpsClickNo,
+            cps_order_no = cps_order_no + :cpsOrderNo,
+            cps_confirmed_commission = cps_confirmed_commission + :cpsConfirmedCommission,
+            cps_pub_commission = cps_pub_commission + :cpsPubCommission,
+            cps_total_confirmed_commission = cps_total_confirmed_commission + :cpsTotalConfirmedCommission,
+            cps_total_commission = cps_total_commission + :cpsTotalCommission,
+            cps_total_price = cps_total_price + :cpsTotalPrice,
+            cpm_view_no = cpm_view_no + :cpmViewNo,
+            cpm_click_no = cpm_click_no + :cpmClickNo,
+            cpm_pub_commission = cpm_pub_commission + :cpmPubCommission,
+            cpm_total_commission = cpm_total_commission + :cpmTotalCommission
+    </sql-query>
+    
+    <sql-query name="statsChannelDaily.insertOrUpdate">
+        insert into bfp_channel_daily_stat
+        (channel_id, stats_day, views, clicks, pageview)
+        values
+        (:channelId, DATE(:date), :viewCount, :clickCount, :pageView)
+        on duplicate key update
+            views = views + :viewCount,
+            clicks = clicks + :clickCount,
+            pageview = pageview + :pageView
+    </sql-query>
+
+</hibernate-mapping>

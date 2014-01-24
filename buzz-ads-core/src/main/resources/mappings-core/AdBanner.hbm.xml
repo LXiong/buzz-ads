@@ -1,0 +1,34 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC
+        "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+        "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping>
+    <class name="com.buzzinate.buzzads.core.bean.AdBanner" table="tmp_admax_uuid_url">
+        <id name="id" column="ID">
+            <generator class="native"/>
+        </id>
+        <property name="url">
+            <column name="url"/>
+        </property>
+        <property name="width" type="int">
+            <column name="width"></column>
+        </property>
+        <property name="height" type="int">
+            <column name="height"></column>
+        </property>
+        <property name="uuid" type="binary">
+            <column name="uuid"></column>
+        </property>
+        <property name="type" column="type">
+            <type name="com.buzzinate.common.util.hibernate.IntegerValuedEnumType">
+                <param name="enum">com.buzzinate.buzzads.enums.AdEntryTypeEnum</param>
+            </type>
+        </property>
+        <property name="network" column="network">
+            <type name="com.buzzinate.common.util.hibernate.IntegerValuedEnumType">
+                <param name="enum">com.buzzinate.buzzads.enums.AdNetworkEnum</param>
+            </type>
+        </property>
+    </class>
+</hibernate-mapping>

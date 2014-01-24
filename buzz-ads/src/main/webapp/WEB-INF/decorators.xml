@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+
+<decorators defaultdir="/decorators">
+    <excludes>
+        <pattern>/iframe*</pattern>
+        <pattern>/api/*</pattern>
+        <pattern>/loginCallback*</pattern>
+        <pattern>/admin/orders/entry/upload</pattern>
+        <pattern>/advertiser/entry/upload</pattern>
+    </excludes>
+    <decorator name="adminMain" page="AdminMain.jsp">
+        <pattern>/admin*</pattern>
+        <pattern>/settlement*</pattern>
+    </decorator>
+	 <decorator name="advertiserHome" page="AdvertiserMain.jsp">
+        <pattern>/advertiser*</pattern>
+    </decorator>
+    <decorator name="default" page="Main.jsp">
+        <pattern>/*</pattern>
+    </decorator>
+</decorators>

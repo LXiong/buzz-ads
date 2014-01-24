@@ -1,0 +1,65 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC 
+"-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping>
+    <class name="com.buzzinate.buzzads.domain.PublisherContactInfo"
+        table="publisher_contact_info">
+        <id name="userId" column="USER_ID">
+            <generator class="assigned" />
+        </id>
+        <property name="name">
+            <column name="NAME" />
+        </property>
+        <property name="mobile">
+            <column name="MOBILE" />
+        </property>
+        <property name="qq">
+            <column name="QQ" />
+        </property>
+        <property name="financeType" column="FINANCE_TYPE">
+            <type name="com.buzzinate.common.util.hibernate.IntegerValuedEnumType">
+                <param name="enum">com.buzzinate.buzzads.enums.FinanceTypeEnum</param>
+            </type>
+        </property>
+        <property name="receiveMethod" column="RECEIVING_METHOD">
+            <type name="com.buzzinate.common.util.hibernate.IntegerValuedEnumType">
+                <param name="enum">com.buzzinate.buzzads.enums.PublisherContactRevMethod</param>
+            </type>
+        </property>
+        <property name="receiveAccount">
+            <column name="RECEIVING_ACCOUNT" />
+        </property>
+        <property name="receiveName">
+            <column name="RECEIVING_NAME" />
+        </property>
+        <property name="receiveBankCode" column="RECEIVING_BANK_CODE">
+            <type name="com.buzzinate.common.util.hibernate.IntegerValuedEnumType">
+                <param name="enum">com.buzzinate.buzzads.enums.BankEnum</param>
+            </type>
+        </property>
+        <property name="receiveBank">
+            <column name="RECEIVING_BANK" />
+        </property>
+        <property name="email">
+            <column name="EMAIL" />
+        </property>
+        <property name="status" column="STATUS">
+            <type name="com.buzzinate.common.util.hibernate.IntegerValuedEnumType">
+                <param name="enum">com.buzzinate.buzzads.enums.PublisherContactStausEnum</param>
+            </type>
+        </property>
+        <property name="proportion">
+            <column name="PROPORTION" />
+        </property>
+    </class>
+    
+    <query name="PublisherContactInfoDao.updatePublisherStatus">
+       update PublisherContactInfo set status = :status where userId = :userId
+    </query>
+    
+    <query name="PublisherContactInfoDao.findByUserIds">
+       from PublisherContactInfo where userId in (:userIds)
+    </query>
+</hibernate-mapping>

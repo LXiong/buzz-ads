@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<project name="admax" basedir="../../../static/js/a/">
+    <property name="db.username" value=""/>
+    <property name="db.password" value=""/>
+
+    <target name="compressTaskYC">
+        <java jar="../../../src/main/tools/yuicompressor-2.4.2.jar" fork="true" failonerror="true">
+            <arg line="--charset utf-8 --type js -o"/>
+            <arg value="${jsfile}U.js"/>
+            <arg value="${jsfile}Org.js"/>
+        </java>
+        <exec executable="native2ascii">
+            <arg line="-encoding UTF-8"/>
+            <arg value="${jsfile}U.js"/>
+            <arg value="${jsfile}.js"/>
+        </exec>
+        <delete file="${jsfile}U.js"/>
+    </target>
+
+    <target name="compressTaskCC">
+        <java jar="../../../src/main/tools/closure-compiler.jar" fork="true" failonerror="true">
+            <arg line="--compilation_level SIMPLE_OPTIMIZATIONS --warning_level VERBOSE --jscomp_off=missingProperties --jscomp_off=checkTypes"/>
+            <arg line="--charset UTF-8 --js"/>
+            <arg value="${jsfile}Org.js"/>
+            <arg line="--js_output_file"/>
+            <arg value="${jsfile}U.js"/>
+        </java>
+        <exec executable="native2ascii">
+            <arg line="-encoding UTF-8"/>
+            <arg value="${jsfile}U.js"/>
+            <arg value="${jsfile}.js"/>
+        </exec>
+        <delete file="${jsfile}U.js"/>
+    </target>
+
+    <target name="compress" description="Compress the JS files">
+        <antcall target="compressTaskCC">
+            <param name="jsfile" value="admax"/>
+        </antcall>
+    </target>
+
+</project>

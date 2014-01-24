@@ -1,0 +1,33 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC 
+"-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping>
+    <class name="com.buzzinate.buzzads.domain.OperationLog" table="operation_log">
+        <id name="id" column="ID">
+            <generator class="native" />
+        </id>
+        <property name="opUserId">
+            <column name="OP_USER"/>
+        </property>
+        <property name="opType">
+            <column name="OP_TYPE"/>
+        </property>
+        <property name="description">
+          <column name="DESCRIPTION"/>
+        </property>
+        <property name="targetUserId">
+          <column name="TARGET_USER"/>
+        </property>
+        <property name="outId">
+          <column name="OUT_ID"/>
+        </property>
+        <property name="createTime">
+          <column name="CREATE_AT"/>
+        </property>
+        <property name="opName">
+          <column name="OP_NAME"/>
+        </property>
+    </class>
+</hibernate-mapping>

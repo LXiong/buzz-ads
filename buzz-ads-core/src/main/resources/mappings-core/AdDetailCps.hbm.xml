@@ -1,0 +1,67 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC 
+"-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping>
+    <class name="com.buzzinate.buzzads.domain.AdDetailCps" table="ad_detail_cps">
+        <id name="id" column="ID">
+            <generator class="native" />
+        </id>
+        <property name="uuidBytes">
+            <column name="UUID"/>
+        </property>
+        <property name="adOrderId">
+          <column name="ADORDER_ID"/>
+        </property>
+        <property name="adEntryId">
+          <column name="ADENTRY_ID"/>
+        </property>
+        <property name="pubComm">
+            <column name="PUB_COMMISSION"/>
+        </property>
+        <property name="comm">
+          <column name="COMMISSION"/>
+        </property>
+        <property name="totalPrice">
+          <column name="TOTAL_PRICE"/>
+        </property>
+        <property name="tradeTime">
+          <column name="TRADE_TIME"/>
+        </property>
+        <property name="source" column="SOURCE">
+            <type name="com.buzzinate.common.util.hibernate.IntegerValuedEnumType">
+              <param name="enum">com.buzzinate.buzzads.enums.OrderSourceEnum</param>
+            </type>
+        </property>
+        <property name="status" column="STATUS">
+            <type name="com.buzzinate.common.util.hibernate.IntegerValuedEnumType">
+              <param name="enum">com.buzzinate.buzzads.enums.TradeConfirmEnum</param>
+            </type>
+        </property>
+        <property name="cpsOid">
+          <column name="CPS_OID"/>
+        </property>
+        <property name="network" column="NETWORK">
+            <type name="com.buzzinate.common.util.hibernate.IntegerValuedEnumType">
+                <param name="enum">com.buzzinate.buzzads.enums.AdNetworkEnum</param>
+            </type>
+        </property>
+        <property name="confirmTime">
+            <column name="CONFIRM_TIME"/>
+        </property>
+    </class>
+    
+    <query name="AdDetailCpsDao.getUuidDetail">
+        from AdDetailCps where uuid = :uuid
+    </query>
+    
+    <query name="AdDetailCpsDao.getAdDetailCpsByOcdId">
+        from AdDetailCps where cpsOid = :cpsOid and source = :source
+    </query>
+    
+    <query name="AdDetailCpsDao.updateForConfirmation">
+        update AdDetailCps set pubComm = :pubComm, comm = :comm, status = :status, confirmTime = :confirmTime where id = :id 
+    </query>
+    
+</hibernate-mapping>

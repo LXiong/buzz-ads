@@ -1,0 +1,31 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC 
+"-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping>
+    <class name="com.buzzinate.buzzads.domain.AdCampBudget" table="ad_campaign_budget">
+        <id name="campaignId" column="CAMPAIGN_ID">
+            <generator class="assigned"/>
+        </id>
+        <property name="advertiserId">
+            <column name="ADVERTISER_ID"/>
+        </property>
+        <property name="dateDay">
+          <column name="DATE_DAY"/>
+        </property>
+        <property name="budgetDay">
+          <column name="BUDGET_DAY"/>
+        </property>
+        <property name="budgetTotal">
+          <column name="BUDGET_TOTAL"/>
+        </property>
+        <property name="maxBudgetDay">
+          <column name="MAX_BUDGET_DAY"/>
+        </property>
+        <property name="maxBudgetTotal">
+          <column name="MAX_BUDGET_TOTAL"/>
+        </property>
+    </class>
+    
+</hibernate-mapping>

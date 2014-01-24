@@ -1,0 +1,7 @@
+run "mvn package", maven shade plugin will generate all-in-one jar in target folder.
+
+To run ad data access and analytics server, use :
+java -cp target/buzz-ads-data-service.jar com.buzzinate.buzzads.data.main.Server
+
+To run lezhi cookie writer server, use :
+java -DAPP_NAME=lezhiGenome -cp target/buzz-ads-data-service.jar com.buzzinate.buzzads.data.main.GenomeFileWriter

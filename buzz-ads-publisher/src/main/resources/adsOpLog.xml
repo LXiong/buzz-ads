@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<log-config>
+    <!-- 月结 -->
+    <log type="10001" objtype="100" objtypename="月结" name="支付佣金" description="站长ID:{pubId},结算月份:{month},结算金额:{commCount}" />
+    <log type="10002" objtype="100" objtypename="月结" name="撤销支付" description="支付ID:{payId}" />
+    <!-- 会员管理 -->
+    <log type="20001" objtype="101" objtypename="会员管理" name="冻结会员" description="站长ID:{pubId},站长账户:{pubCount}" />
+    <log type="20002" objtype="101" objtypename="会员管理" name="解冻会员" description="站长ID:{pubId},站长账户:{pubCount}" />
+    <log type="20003" objtype="101" objtypename="会员管理" name="更新会员" description="原资料:{sourcePub},新资料:{newPub}" />
+</log-config>

@@ -1,0 +1,52 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC 
+"-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping>
+    <class name="com.buzzinate.buzzads.domain.AdvertiserAccount" table="advertiser_account">
+        <id name="advertiserId" column="ADVERTISER_ID">
+            <generator class="assigned"/>
+        </id>
+        
+        <property name="companyName">
+            <column name="COMPANY_NAME"></column>
+        </property>
+        
+        <property name="websiteName">
+            <column name="WEBSITE_NAME"></column>
+        </property>
+        
+        <property name="websiteUrl">
+            <column name="WEBSITE_URL"></column>
+        </property>
+        
+        <property name="businessType" column="BUSINESS_TYPE">
+            <type name="com.buzzinate.common.util.hibernate.IntegerValuedEnumType">
+                <param name="enum">com.buzzinate.buzzads.enums.AdvertiserBusinessType</param>
+            </type>
+        </property>
+        
+        <property name="status" column="STATUS">
+            <type name="com.buzzinate.common.util.hibernate.IntegerValuedEnumType">
+                <param name="enum">com.buzzinate.buzzads.enums.AdvertiserStatusEnum</param>
+            </type>
+        </property>
+        
+        <property type="binary" name="secretBytes">
+            <column name="SECRET" />
+        </property>
+    </class>
+
+    <query name="AdvertiserAccountDao.listAllAdvertisers">
+        from AdvertiserAccount where status = :status
+    </query>
+
+    <query name="AdvertiserAccountDao.listAllAdvertiserName">
+        select advertiserId,companyName from AdvertiserAccount
+    </query>
+    
+    <query name="AdvertiserAccountDao.updateAdvertiserStatus">
+       update AdvertiserAccount set status = :status where advertiserId = :advertiserId
+    </query>
+</hibernate-mapping>

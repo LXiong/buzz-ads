@@ -1,0 +1,125 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC 
+"-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping>
+    <class name="com.buzzinate.buzzads.domain.Channel" table="bfp_channel">
+        <id name="id" column="ID">
+            <generator class="native" />
+        </id>
+        <property name="domain">
+            <column name="DOMAIN"/>
+        </property>
+        <property name="uuidBytes" type="binary">
+            <column name="UUID"/>
+        </property>
+        <property name="level">
+            <column name="CHANNEL_LEVEL"/>
+        </property>
+        <property name="type" column="CHANNEL_TYPE">
+            <type name="com.buzzinate.common.util.hibernate.IntegerValuedEnumType">
+                <param name="enum">com.buzzinate.buzzads.enums.ChannelTypeEnum</param>
+            </type>
+        </property>
+        <property name="status" column="STATUS">
+            <type name="com.buzzinate.common.util.hibernate.IntegerValuedEnumType">
+                <param name="enum">com.buzzinate.buzzads.enums.ChannelStatusEnum</param>
+            </type>
+        </property>
+        <property name="netWork" column="NETWORK">
+            <type name="com.buzzinate.common.util.hibernate.IntegerValuedEnumSetType">
+                <param name="enum">com.buzzinate.buzzads.enums.AdNetworkEnum</param>
+            </type>
+        </property>
+        <property name="adType" column="AD_TYPE">
+            <type name="com.buzzinate.common.util.hibernate.IntegerValuedEnumType">
+                <param name="enum">com.buzzinate.buzzads.enums.AdEntryTypeEnum</param>
+            </type>
+        </property>
+        <property name="openTime">
+            <column name="OPEN_TIME"/>
+        </property>
+        <property name="closeTime">
+            <column name="CLOSE_TIME"/>
+        </property>
+        <property name="minCPM">
+            <column name="MIN_CPM"/>
+        </property>
+        <property name="adThumb">
+            <column name="AD_THUMB"/>
+        </property>
+        <property name="operateResult">
+            <column name="OPERATE_REASON"/>
+        </property>
+        <property name="style" column="STYLE">
+            <type name="com.buzzinate.common.util.hibernate.IntegerValuedEnumSetType">
+                <param name="enum">com.buzzinate.buzzads.enums.ChannelStyleEnum</param>
+            </type>
+        </property>
+        <property name="name">
+            <column name="NAME"/>
+        </property>
+    </class>
+
+    <query name="ChannelDao.listChannelByUuid">
+        from Channel where uuidBytes = :uuidBytes
+    </query>
+    
+    <query name="ChannelDao.update1stLvlChannelStatus">
+        UPDATE Channel set status = :status, operateResult = :result WHERE uuidBytes = :uuidBytes 
+            AND not (status = :deletedStatus AND level = 2)
+    </query>
+    
+    <query name="ChannelDao.delete1stLvlChannel">
+        DELETE FROM Channel WHERE uuidBytes = :uuidBytes 
+    </query>
+    
+    <query name="ChannelDao.update2ndLvlChannelStatus">
+        UPDATE Channel set status = :status, operateResult = :result WHERE id = :id
+    </query>
+    
+    <query name="ChannelDao.openChannel">
+        UPDATE Channel set status = :status, openTime = :openTime WHERE id in (:openIds)
+    </query>
+    
+    <query name="ChannelDao.closeChannel">
+        UPDATE Channel set status = :status, closeTime = :closeTime WHERE id in (:closeIds)
+    </query>
+    
+    <query name="ChannelDao.findChannelByStatus">
+        from Channel where status = :status 
+    </query>
+
+    <sql-query name="ChannelDao.getSiteListBySiteName.count">
+        <return-scalar column="recordSize" type="int"/>
+              SELECT    COUNT(DISTINCT(channel.uuid)) recordSize
+              FROM      bfp_channel channel, stats_publisher_daily stats
+              WHERE     stats.UUID = channel.UUID 
+                        AND channel.CHANNEL_LEVEL = 1
+                        AND stats.DATE_DAY BETWEEN :dateStart AND :dateEnd
+                        AND channel.domain LIKE :siteUrlSrh
+    </sql-query>
+
+    <sql-query name="ChannelDao.getSiteListBySiteName">
+        <return-scalar column="uuidByte" type="binary"/>
+        <return-scalar column="url" type="string"/>
+        <return-scalar column="comm" type="int"/>
+        <return-scalar column="pageview" type="int"/>
+        <return-scalar column="clicks" type="int"/>
+        <return-scalar column="views" type="int"/>
+            SELECT   stats.UUID uuidByte,
+                     channel.domain url,
+                     SUM(stats.CPC_PUB_COMMISSION) + SUM(stats.CPS_PUB_COMMISSION) + SUM(stats.CPM_PUB_COMMISSION)*100 comm,
+                     SUM(stats.pageview) pageview,
+                     SUM(stats.clicks) clicks,
+                     SUM(stats.views) views
+            FROM     bfp_channel channel, stats_publisher_daily stats
+            WHERE    stats.UUID = channel.UUID 
+                     AND channel.CHANNEL_LEVEL = 1
+                     AND stats.DATE_DAY BETWEEN :dateStart AND :dateEnd
+                     AND channel.domain LIKE :siteUrlSrh
+            GROUP BY stats.UUID
+    </sql-query>
+
+</hibernate-mapping>

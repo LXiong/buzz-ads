@@ -1,0 +1,189 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC 
+"-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping>
+    <class name="com.buzzinate.buzzads.domain.AdvertiserBilling" table="advertiser_billing">
+        <id name="id" column="ID">
+            <generator class="native" />
+        </id>
+        <property name="advertiserId">
+            <column name="ADVERTISER_ID"/>
+        </property>
+        <property name="type" column="TYPE">
+            <type name="com.buzzinate.common.util.hibernate.IntegerValuedEnumType">
+                <param name="enum">com.buzzinate.buzzads.enums.AdvertiserBillingType</param>
+            </type>
+        </property>
+        <property name="billingDay">
+          <column name="BILLING_DAY"/>
+        </property>        
+        <property name="comment">
+          <column name="COMMENT"/>
+        </property>
+        <property name="debits">
+          <column name="DEBITS"/>
+        </property>
+        <property name="credits">
+          <column name="CREDITS"/>
+        </property>
+        <property name="balance">
+          <column name="BALANCE"/>
+        </property>
+        <property name="updateAt">
+          <column name="UPDATE_AT"/>
+        </property>
+    </class>
+    
+    <query name="AdvertiserBillingDao.listBillingsByDay">
+        from AdvertiserBilling 
+        where advertiserId = :advertiserId and 
+            billingDay between :startDate and :endDate and 
+            type in ( :types ) 
+        order by updateAt desc
+    </query>
+       
+    <query name="AdvertiserBillingDao.listAllBillingsByDay">
+        from AdvertiserBilling 
+        where billingDay between :startDate and :endDate and 
+            type in ( :types ) 
+        order by updateAt desc
+    </query>
+     
+    <query name="AdvertiserBillingDao.countByDay">
+        select count (*) 
+        from AdvertiserBilling 
+        where advertiserId= :advertiserId and 
+            billingDay between :startDate and :endDate and 
+            type in ( :types )
+    </query>
+    
+    <query name="AdvertiserBillingDao.countAllByDay">
+        select count (*) 
+        from AdvertiserBilling 
+        where billingDay between :startDate and :endDate and 
+            type in ( :types )
+    </query>
+    
+    <sql-query name="AdvertiserBillingDao.countByMonth">
+        <return-scalar column="num" type="long"/>
+        select count(distinct date_format(billing_day,'%Y/%m')) num 
+        from advertiser_billing 
+        where advertiser_id = :advertiserId and 
+            billing_day between :startDate and :endDate and 
+            type in ( :types ) 
+        group by date_format(billing_day,'%Y/%m')
+    </sql-query>
+    
+    <sql-query name="AdvertiserBillingDao.countAllByMonth">
+        <return-scalar column="num" type="long"/>
+        select count(distinct advertiser_id, date_format(billing_day,'%Y/%m')) num 
+        from advertiser_billing 
+        where billing_day between :startDate and :endDate and 
+            type in ( :types ) 
+        group by advertiser_id,date_format(billing_day,'%Y/%m')
+    </sql-query>
+    
+    <sql-query name="AdvertiserBillingDao.listBillingsByMonth">
+        <return-scalar column="advertiserId" type="int"/>
+        <return-scalar column="dateDay" type="string"/>
+        <return-scalar column="debits" type="int"/>
+        <return-scalar column="credits" type="int"/>
+        <![CDATA[
+        select advertiser_id advertiserId,
+            date_format(billing_day,'%Y/%m') dateDay, 
+            sum(debits) debits,
+            sum(credits) credits 
+        from advertiser_billing 
+        where advertiser_id = :advertiserId and 
+            billing_day between :startDate and :endDate and 
+            type in ( :types ) 
+        group by date_format(billing_day,'%Y/%m')
+        order by dateDay desc
+        ]]>
+    </sql-query>
+    
+    <sql-query name="AdvertiserBillingDao.listBalancesByMonth">
+        <return-scalar column="advertiserId" type="int"/>
+        <return-scalar column="dateDay" type="string"/>
+        <return-scalar column="balance" type="long"/>
+        <![CDATA[
+        select  advertiser_id advertiserId,
+            date_format(billing_day,'%Y/%m') dateDay,
+            balance balance 
+        from advertiser_billing 
+        where advertiser_id = :advertiserId and 
+            type in ( :types ) and 
+            billing_day between :startDate and :endDate and 
+            not exists (select advertiser_id, billing_day from advertiser_billing as ab 
+               where ab.advertiser_id = :advertiserId 
+                    and type in ( :types ) 
+                    and billing_day between :startDate and :endDate 
+                    and date_format(ab.billing_day,'%Y/%m') = date_format(advertiser_billing.billing_day,'%Y/%m')
+                    and ab.update_at > advertiser_billing.update_at)
+        order by dateDay desc
+        ]]>
+    </sql-query>
+    
+    <sql-query name="AdvertiserBillingDao.listAllBillingsByMonth">
+        <return-scalar column="advertiserId" type="int"/>
+        <return-scalar column="dateDay" type="string"/>
+        <return-scalar column="debits" type="int"/>
+        <return-scalar column="credits" type="int"/>
+        <![CDATA[
+        select advertiser_id advertiserId,
+            date_format(billing_day,'%Y/%m') dateDay, 
+            sum(debits) debits,
+            sum(credits) credits
+        from advertiser_billing 
+        where billing_day between :startDate and :endDate and 
+            type in ( :types ) 
+        group by advertiser_id,date_format(billing_day,'%Y/%m')
+        order by dateDay desc
+        ]]>
+    </sql-query>
+    
+    <sql-query name="AdvertiserBillingDao.listAllBalancesByMonth">
+        <return-scalar column="advertiserId" type="int"/>
+        <return-scalar column="dateDay" type="string"/>
+        <return-scalar column="balance" type="long"/>
+        <![CDATA[
+        select advertiser_id advertiserId,
+            date_format(billing_day,'%Y/%m') dateDay,
+            balance balance 
+        from advertiser_billing 
+        where type in ( :types ) and 
+            billing_day between :startDate and :endDate and 
+            not exists (select advertiser_id, billing_day from advertiser_billing as ab 
+               where ab.advertiser_id = advertiser_billing.advertiser_id 
+                    and type in ( :types ) 
+                    and billing_day between :startDate and :endDate 
+                    and date_format(ab.billing_day,'%Y/%m') = date_format(advertiser_billing.billing_day,'%Y/%m')
+                    and ab.update_at > advertiser_billing.update_at)
+        order by dateDay desc
+        ]]>
+    </sql-query>
+
+
+    <query name="AdvertiserBillingDao.listAllBillingsByType">
+        from AdvertiserBilling
+        where type in ( :types )
+            order by billingDay, updateAt desc
+    </query>
+
+    <query name="AdvertiserBillingDao.countByType">
+        select count (*)
+        from AdvertiserBilling
+        where type in ( :types )
+    </query>
+    
+    <query name="AdvertiserBillingDao.getAdvertiserBillingByDay">
+        select new AdvertiserBilling(advertiserId, sum(debits)) from AdvertiserBilling
+        where advertiserId = :advertiserId and 
+            type = 0 and 
+            billingDay between :startDate and :endDate  
+        group by advertiserId
+    </query>
+    
+</hibernate-mapping>

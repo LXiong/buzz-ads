@@ -1,0 +1,10 @@
+ALTER TABLE  `ad_entry` ADD  `DISPLAY_POSITION` TINYINT( 1 ) NOT NULL DEFAULT  '9';
+
+CREATE TABLE `ad_order_price_change` (
+`ID`  int NOT NULL AUTO_INCREMENT ,
+`ORDER_ID`  int NOT NULL COMMENT '广告组ID' ,
+`DATE_TIME`  datetime NOT NULL COMMENT '价格变动时间' ,
+`BID_PRICE_OLD`  int(11) NOT NULL COMMENT '价格变动前' ,
+`BID_PRICE_NEW`  int(11) NOT NULL COMMENT '价格变动后' ,
+PRIMARY KEY (`ID`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='广告组价格信息变动表';

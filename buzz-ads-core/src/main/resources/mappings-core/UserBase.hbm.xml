@@ -1,0 +1,32 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC
+"-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping>
+    <class name="com.buzzinate.buzzads.user.UserBase" table="user">
+        <id name="userID" column="USER_ID">
+            <generator class="native" />
+        </id>
+        <property name="name" >
+            <column name="NAME" />
+        </property>
+        <property name="loginID" >
+            <column name="LOGIN_ID" />
+        </property>
+        <property name="password" >
+            <column name="PASSWORD" />
+        </property>
+        <property name="email" >
+            <column name="EMAIL" />
+        </property>
+    </class>
+
+    <query name="user.getUser">
+        select ub from UserBase ub where ub.userID=:userID
+    </query>
+    <query name="user.getUserByEmail">
+        select ub from UserBase ub where ub.email=:email
+    </query>
+    
+</hibernate-mapping>

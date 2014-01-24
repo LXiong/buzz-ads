@@ -1,0 +1,10 @@
+/.settings
+/.project
+/.classpath
+/target
+/.checkstyle
+/.pmd
+/test-output
+/src/main/webapp/WEB-INF/classes
+/.codepro
+~*  

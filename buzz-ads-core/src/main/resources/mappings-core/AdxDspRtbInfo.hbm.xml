@@ -1,0 +1,52 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC 
+"-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping>
+    <class name="com.buzzinate.buzzads.domain.AdxDspRtbInfo" table="adx_dsp_rtb_info">
+        <id name="id" column="ID">
+            <generator class="native" />
+        </id>
+        <property name="key" >
+          <column name="`KEY`" />
+        </property>
+        <property name="winnerNotifyUrl">
+          <column name="WINNERNOTIFYURL"/>
+        </property>
+        <property name="bidRequestUrl">
+          <column name="BIDREQUESTURL"/>
+        </property>
+        <property name="rtb">
+          <column name="RTB"/>
+        </property>
+    </class>
+
+    <query name="AdxDspRtbInfoDao.updateAdxDspRtbInfo">
+        update AdxDspRtbInfo set winnerNotifyUrl = :winnerNotifyUrl, bidRequestUrl = :bidRequestUrl where key = :key
+    </query>
+
+    <query name="AdxDspRtbInfoDao.getRtbInfoByKey">
+        FROM AdxDspRtbInfo where key = :key
+    </query>
+
+    <sql-query name="AdxDspRtbInfoDao.getAdxDspRtbInfoById">
+        <return-scalar column="keyValue" type="int"/>
+        <return-scalar column="winnerNotifyUrl" type="string"/>
+        <return-scalar column="bidRequestUrl" type="string"/>
+        <return-scalar column="requestCount" type="long"/>
+        <return-scalar column="responseCount" type="long"/>
+        <return-scalar column="bidSuccCount" type="long"/>
+        <return-scalar column="validCount" type="long"/>
+        select  rtbInfo.`kEY`               keyValue, 
+                rtbInfo.bidRequestUrl       bidRequestUrl,
+                rtbInfo.winnerNotifyUrl     winnerNotifyUrl,
+                stats.REQUEST_NO            requestCount,
+                stats.RESPONSE_NO           responseCount,
+                stats.BIDSUCC_NO            bidSuccCount,
+                stats.VALID_NO              validCount
+        from    adx_dsp_rtb_statistic stats, adx_dsp_rtb_info rtbInfo
+        where   rtbInfo.`kEY` = stats.`kEY` and rtbInfo.id = :dspId
+    </sql-query>
+
+</hibernate-mapping>

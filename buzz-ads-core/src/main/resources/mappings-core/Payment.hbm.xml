@@ -1,0 +1,58 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC 
+"-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping>
+    <class name="com.buzzinate.buzzads.domain.Payment" table="publisher_payment">
+        <id name="id" column="ID">
+            <generator class="native" />
+        </id>
+        <property name="userId" >
+            <column name="USER_ID" />
+        </property>
+        <property name="period" >
+            <column name="PERIOD" />
+        </property>
+        <property name="amount" >
+            <column name="AMOUNT" />
+        </property>
+        <property name="fee" >
+            <column name="FEE" />
+        </property>
+        <property name="tax" >
+            <column name="TAX" />
+        </property>
+        <property name="paid" >
+            <column name="PAID" />
+        </property>
+        <property name="receiptNo" >
+            <column name="RECEIPT_NO" />
+        </property>
+        <property name="comment" >
+            <column name="COMMENT" />
+        </property>
+        <property name="paymentTime">
+            <column name="PAYMENT_TIME" />
+        </property>
+        <property name="updateTime">
+            <column name="UPDATE_TIME" />
+        </property>
+        <property name="status">
+            <column name="STATUS" />
+        </property>
+    </class>
+    
+    <sql-query name="PaymentDao.countByUserId">
+        <return-scalar column="num" type="int"/>
+        select count(*) num from Payment where userId = :userId
+    </sql-query>
+    
+    <query name="PaymentDao.getByUserId">
+        from Payment where userId = :userId and status = 1 order by period desc
+    </query>
+    
+    <query name="PaymentDao.deletePayment">
+        update Payment set status = 0,updateTime = now() where id = :paymentId
+    </query>
+</hibernate-mapping>

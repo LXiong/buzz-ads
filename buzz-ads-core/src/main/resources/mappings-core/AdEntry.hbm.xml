@@ -1,0 +1,103 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC 
+"-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping>
+    <class name="com.buzzinate.buzzads.domain.AdEntry" table="ad_entry">
+        <id name="id" column="ID">
+            <generator class="native" />
+        </id>
+        <property name="orderId">
+            <column name="ORDER_ID"/>
+        </property>
+        <property name="link">
+            <column name="LINK"/>
+        </property>
+        <property name="resourceType" column="RESOURCE_TYPE">
+            <type name="com.buzzinate.common.util.hibernate.IntegerValuedEnumType">
+                <param name="enum">com.buzzinate.buzzads.enums.AdEntryTypeEnum</param>
+            </type>
+        </property>
+        <property name="resourceUrl">
+          <column name="RESOURCE_URL"/>
+        </property>
+        <property name="title">
+          <column name="TITLE"/>
+        </property>
+        <property name="updateAt">
+          <column name="UPDATE_AT"/>
+        </property>
+        
+        <property name="campaignId">
+            <column name="CAMPAIGN_ID"/>
+        </property>
+        <property name="advertiserId">
+            <column name="ADVERTISER_ID"/>
+        </property>
+        <property name="name">
+          <column name="NAME"/>
+        </property>
+        <property name="status" column="STATUS">
+            <type name="com.buzzinate.common.util.hibernate.IntegerValuedEnumType">
+                <param name="enum">com.buzzinate.buzzads.enums.AdStatusEnum</param>
+            </type>
+        </property>
+        <property name="description">
+          <column name="DESCRIPTION"/>
+        </property>
+        <property name="destination">
+          <column name="DESTINATION"/>
+        </property>
+        <property name="size" column="SIZE">
+            <type name="com.buzzinate.common.util.hibernate.IntegerValuedEnumType">
+                <param name="enum">com.buzzinate.buzzads.enums.AdEntrySizeEnum</param>
+            </type>
+        </property>
+        <property name="position" column="DISPLAY_POSITION">
+            <type name="com.buzzinate.common.util.hibernate.IntegerValuedEnumType">
+                <param name="enum">com.buzzinate.buzzads.enums.AdEntryPosEnum</param>
+            </type>
+        </property>
+        <property name="displayUrl">
+          <column name="DISPLAY_URL"/>
+        </property>
+    </class>
+
+    <query name="AdEntryDao.getAdEntries">
+        from AdEntry
+    </query>
+    <query name="AdEntryDao.listEntriesByOrderId">
+        from AdEntry where orderId = :adOrderId
+    </query>
+    <query name="AdEntryDao.listEntriesByOrderIds">
+        from AdEntry where orderId in (:orderIds)
+    </query>
+    <query name="AdEntryDao.updateEntryStatus">
+        update AdEntry set status = :status, updateAt = now() where id = :entryId
+    </query>
+    <sql-query name="AdEntryDao.getAdsByTitle">
+        <return-scalar column="id" type="int"/>
+        <return-scalar column="title" type="string"/>
+        select id,title from ad_entry where title like :title
+    </sql-query>
+    <sql-query name="AdEntryDao.getAdsByIds">
+        <return-scalar column="id" type="int"/>
+        <return-scalar column="title" type="string"/>
+        select id,title from ad_entry where id in ( :entryIds )
+    </sql-query>
+    <sql-query name="AdEntryDao.getOrderId">
+        <return-scalar column="order_id" type="int"/>
+        select order_id from ad_entry where id = :id
+    </sql-query>
+    
+    <query name="AdEntryDao.listEntriesByCampaignId">
+        from AdEntry where campaignId =:campaignId
+    </query>
+    <query name="AdEntryDao.listAdEntryByAdvertiserId">
+        from AdEntry where advertiserId = :advertiserId
+    </query>
+    <query name="AdEntryDao.listActiveEntriesByAdvertiserIdWithActiveOrderIds">
+        from AdEntry where advertiserId = :advertiserId and status = 1 and orderId in (:activeOrderIds)
+    </query>
+</hibernate-mapping>

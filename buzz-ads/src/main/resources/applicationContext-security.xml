@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<beans:beans xmlns="http://www.springframework.org/schema/security"
+             xmlns:beans="http://www.springframework.org/schema/beans"
+             xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+             xsi:schemaLocation="http://www.springframework.org/schema/beans
+        http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+        http://www.springframework.org/schema/security
+        http://www.springframework.org/schema/security/spring-security-3.0.xsd">
+
+
+    <http auto-config="false" entry-point-ref="casEntryPoint" path-type="regex">
+        <access-denied-handler ref="customAccessDeniedHandler"/>
+        <intercept-url pattern="/.*\.ico" filters="none"/>
+        <intercept-url pattern='/decorators/.*' access='ROLE_FORBIDDEN'/>
+        <intercept-url pattern='/jsp/.*' access='ROLE_FORBIDDEN'/>
+
+        <!-- for admin -->
+        <intercept-url pattern="/admin/*.*" access="ROLE_AD_ADMIN"/>
+        <!-- for finance -->
+        <intercept-url pattern="/finance/*.*" access="ROLE_AD_FINANCE"/>
+        <intercept-url pattern="/settlement/*.*" access="ROLE_AD_ADMIN,ROLE_AD_FINANCE"/>
+        <!-- for advertiser -->
+        <intercept-url pattern="/advertiser/*.*" access="ROLE_ADVERTISER, ROLE_AD_ADMIN"/>
+        <!-- for publisher -->
+        <intercept-url pattern="/publisher/*.*" access="ROLE_PUBLISHER"/>
+        <!-- for user -->
+        <intercept-url pattern="/user/*.*" access="ROLE_USER"/>
+
+        <intercept-url pattern="/login" access="ROLE_USER"/>
+
+        <!--<intercept-url pattern="/order" access="ROLE_USER"/>-->
+
+        <!--<intercept-url pattern="/checkout" access="ROLE_USER"/>-->
+
+        <!--<intercept-url pattern="/returnURL" access="ROLE_USER"/>-->
+
+        <!-- for common -->
+        <intercept-url pattern='/.*' access="IS_AUTHENTICATED_ANONYMOUSLY"/>
+
+
+        <logout logout-success-url="/logout"/>
+        <custom-filter ref="requestSingleLogoutFilter" before="LOGOUT_FILTER"/>
+        <custom-filter ref="singleLogoutFilter" before="CAS_FILTER"/>
+        <custom-filter ref="casFilter" position="CAS_FILTER"/>
+    </http>
+
+
+    <authentication-manager alias="authenticationManager">
+        <authentication-provider ref="casAuthProvider"/>
+    </authentication-manager>
+
+    <beans:bean id="customAccessDeniedHandler" class="com.buzzinate.buzzads.sso.CustomAccessDeniedHandler">
+        <beans:property name="errorPage" value="/AccessDenied"/>
+    </beans:bean>
+</beans:beans>

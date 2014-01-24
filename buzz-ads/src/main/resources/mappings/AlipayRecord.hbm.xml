@@ -1,0 +1,50 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC
+        "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+        "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping>
+    <class name="com.buzzinate.buzzads.domain.AlipayRecord" table="recharge_alipay_record">
+        <id name="id" column="ID">
+            <generator class="native"/>
+        </id>
+        <property name="recordId">
+            <column name="RECORD_ID"/>
+        </property>
+        <property name="advertiserId">
+            <column name="ADVERTISER_ID"/>
+        </property>
+        <property name="amount">
+            <column name="TOTAL_FEE"/>
+        </property>
+        <property name="tradeNo">
+            <column name="TRADE_NO"/>
+        </property>
+        <property name="aliTradeNo">
+            <column name="ALI_TRADE_NO"/>
+        </property>
+        <property name="tradeStatus" column="TRADE_STATUS">
+            <type name="com.buzzinate.common.util.hibernate.IntegerValuedEnumType">
+                <param name="enum">com.buzzinate.buzzads.domain.enums.TradeStatus</param>
+            </type>
+        </property>
+        <property name="createTime">
+            <column name="CREATE_TIME"/>
+        </property>
+        <property name="paymentTime">
+            <column name="PAYMENT_TIME"/>
+        </property>
+    </class>
+    <sql-query name="AlipayRecord.getAdmounCurrntDay">
+        <return-scalar column="TOTAL_FEE" type="int"/>
+        <![CDATA[
+	    SELECT COALESCE(sum(TOTAL_FEE),0) TOTAL_FEE 
+	    from  recharge_alipay_record
+	    where TRADE_STATUS =2 and PAYMENT_TIME>=:dateS and PAYMENT_TIME <:dateE
+	]]>
+    </sql-query>
+
+    <query name="AlipayRecord.getAlipayRecordsCount">
+        select count(id) from AlipayRecord
+    </query>
+</hibernate-mapping>

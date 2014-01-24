@@ -1,0 +1,59 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC 
+"-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping>
+    <class name="com.buzzinate.buzzads.domain.ChanetTradeData" table="chanet_data">
+        <id name="id" column="ID">
+            <generator class="native" />
+        </id>
+        <property name="datetime">
+            <column name="DATETIME"/>
+        </property>
+        <property name="billingType">
+            <column name="BILLING_TYPE"/>
+        </property>
+        <property name="campaignId">
+          <column name="CAMPAIGN_ID"/>
+        </property>
+        <property name="campaignName">
+          <column name="CAMPAIGN_NAME"/>
+        </property>
+        <property name="extinfo">
+          <column name="EXTINFO"/>
+        </property>
+        <property name="userinfo">
+          <column name="USERINFO"/>
+        </property>
+        <property name="commission">
+          <column name="COMMISSION"/>
+        </property>
+        <property name="totalPrice">
+          <column name="TOTAL_PRICE"/>
+        </property>
+        <property name="ocd">
+          <column name="OCD"/>
+        </property>
+        <property name="status">
+          <column name="STATUS"/>
+        </property>
+        <property name="paid">
+          <column name="PAID"/>
+        </property>
+        <property name="confirm">
+          <column name="CONFIRM"/>
+        </property>
+        <property name="updateAt">
+          <column name="UPDATE_AT"/>
+        </property>
+    </class>
+    
+    <query name="ChanetTradeDataDao.getChanetTransactions">
+        from ChanetTradeData
+    </query>
+    
+    <query name="ChanetTradeDataDao.getChanetDataByOcd">
+        from ChanetTradeData where ocd = :ocd
+    </query>
+</hibernate-mapping>

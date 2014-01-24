@@ -1,0 +1,5 @@
+run "mvn package", maven shade plugin will generate all-in-one jar in target folder.
+
+To run ad billing server, use :
+java -cp target/buzz-ads-billing.jar com.buzzinate.buzzads.billing.main.Server
+

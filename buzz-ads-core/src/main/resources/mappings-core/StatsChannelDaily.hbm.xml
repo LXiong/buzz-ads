@@ -1,0 +1,31 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC
+"-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping>
+    <class name="com.buzzinate.buzzads.analytics.stats.ChannelDailyStatistic" table="bfp_channel_daily_stat">
+        <id name="id" column="ID">
+            <generator class="native" />
+        </id>
+        <property name="channelId">
+            <column name="CHANNEL_ID" />
+        </property>
+        <property name="dateDay">
+            <column name="STATS_DAY" />
+        </property>
+        <property name="views">
+            <column name="VIEWS" />
+        </property>
+        <property name="clicks">
+            <column name="CLICKS" />
+        </property>
+        <property name="pageview">
+             <column name="PAGEVIEW" />
+        </property>
+    </class>
+
+    <query name="StatsChannelDailyDao.getChannelDaily">
+        from ChannelDailyStatistic where channelId = :channelId AND dateDay = :dateDay
+    </query>
+</hibernate-mapping>

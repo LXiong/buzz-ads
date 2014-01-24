@@ -1,0 +1,49 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC 
+"-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping>
+    <class name="com.buzzinate.buzzads.domain.AdvertiserBalance" table="advertiser_balance">
+        <id name="advertiserId" column="ADVERTISER_ID">
+            <generator class="assigned"/>
+        </id>
+        <property name="debitsTotal">
+          <column name="DEBITS_TOTAL"/>
+        </property>
+        <property name="creditsTotal">
+          <column name="CREDITS_TOTAL"/>
+        </property>
+        <property name="balance">
+          <column name="BALANCE"/>
+        </property>
+        <property name="updateAt">
+          <column name="UPDATE_AT"/>
+        </property>
+    </class>
+    
+    <sql-query name="AdvertiserBalanceDao.insertOrUpdateForCredits">
+        insert into advertiser_balance (advertiser_id, debits_total, credits_total, balance, update_at) 
+        values (:advertiserId, 0, :credits, :credits, now())
+        on duplicate key update
+        credits_total = credits_total + :credits, balance = balance + :credits, update_at = now()
+    </sql-query>
+    
+    <sql-query name="AdvertiserBalanceDao.insertOrUpdateForDebits">
+        insert into advertiser_balance (advertiser_id, debits_total, credits_total, balance, update_at) 
+        values (:advertiserId, :debits, 0, (0 - :debits), now())
+        on duplicate key update
+        debits_total = debits_total + :debits, balance = balance - :debits, update_at = now()
+    </sql-query>    
+    
+    <query name="AdvertiserBalanceDao.listByAdvertiserIds">
+        select advertiserId, balance from AdvertiserBalance where advertiserId in ( :advertiserIds )
+    </query>
+    <query name="AdvertiserBalanceDao.getByAdvertiserId">
+        select balance from AdvertiserBalance where advertiser_id = :advertiserId
+    </query>
+
+    <query name="AdvertiserBalanceDao.getBalanceSum">
+        select sum(balance) from AdvertiserBalance 
+    </query>
+</hibernate-mapping>

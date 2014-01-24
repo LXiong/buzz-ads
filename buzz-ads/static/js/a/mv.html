@@ -1,0 +1,49 @@
+<!doctype html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title></title>
+	<style type="text/css">
+		html, body, div, span, applet, object, iframe, p, blockquote, pre,
+		a, abbr, acronym, address, big, cite, code,
+		del, dfn, em, font, img, ins, kbd, q, s, samp,
+		small, strike, strong, tt, var,
+		b, u, i, center, dl, dt, dd, ol, ul, li,
+		fieldset, form, label, legend, button,
+		table, caption, tbody, tfoot, thead, tr, th, td, h1, h2, h3 {
+		    margin: 0;
+		    padding: 0;
+		    border: none;
+		    outline: 0;
+		    font-size: 100%;
+		    vertical-align: baseline;
+		    background: transparent;
+		}
+	</style>
+</head>
+<body>
+	<script type="text/javascript">
+		function parseOptions(src) {
+	        var options = {}, g, f, c, a, e;
+	        g = /\?(.*)|#(.*)/.exec(src);
+            if (g) {
+            	g = g[0].slice(1).replace("+", " ").split(/[&;]/g);
+		        for (f = 0; f < g.length; f++) {
+		            c = g[f].split("=");
+		            a = decodeURIComponent(c[0]);
+		            e = "";
+		            if (c.length != 1) e = decodeURIComponent(c[1]);
+		            options[a] = e;
+		        }
+            }
+	        return options;
+		}
+		var mvData=parseOptions(window.location.href);
+		var mediav_ad_ref = document.referrer;
+		var mediav_ad_pub = mvData.pub;
+		var mediav_ad_width = mvData.w;
+		var mediav_ad_height = mvData.h;
+	</script>
+	<script type="text/javascript" language="javascript" charset="utf-8"  src="http://static.mediav.com/js/mvf_g2.js"></script>
+</body>
+</html>

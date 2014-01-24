@@ -1,0 +1,36 @@
+#####################################################
+## Bshare Path ##
+buzzads.server=http://www.bshare.local/buzz-ads
+auth.server=http://one.bshare.local/bshare_passport
+auth.client=http://www.bshare.local/buzz-ads
+static.path=http://ads.static.local
+
+redis.ips=localhost:6379
+analytics.kestrel.ips=localhost:22133
+
+#####################################################
+## For Database ##
+datasource.hibernate.showsql=true
+
+datasource.main.master.ip=localhost
+datasource.main.slave.ip=localhost
+datasource.main.dbname=bshare
+
+datasource.main.master.username=buzzinate_w
+datasource.main.master.password=
+datasource.main.slave.username=buzzinate_r
+datasource.main.slave.password=
+
+datasource.buzzads.master.ip=localhost
+datasource.buzzads.slave.ip=localhost
+datasource.buzzads.dbname=buzzads
+
+datasource.buzzads.master.username=buzzinate_w
+datasource.buzzads.master.password=
+datasource.buzzads.slave.username=buzzinate_r
+datasource.buzzads.slave.password=
+
+
+
+
+
